@@ -1,0 +1,25 @@
+[{
+        "mood"  : "3",
+        "compl" : "4",
+        "tempo" : "4",
+        "parts" : "Chorus, Chorus",
+        "genre" : "pop",
+        "key"   : "C",
+        "scale" : "major"
+},
+{       "mood"  : "3",
+        "compl" : "2",
+        "tempo" : "2",
+        "parts" : "Chorus, Chorus",
+        "genre" : "pop",
+        "key"   : "C",
+        "scale" : "major"
+},
+
+{       "mood" : "2",
+        "compl" : "3",
+        "tempo" : "4",
+        "parts" : "Verse, Verse, Verse",
+        "genre" : "folk"
+}
+]
