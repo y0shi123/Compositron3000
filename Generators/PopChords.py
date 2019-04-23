@@ -17,30 +17,79 @@ class PopChords:
 
         if mycompl == 1 or mycompl == 2:
             pattern = pattern*2
+            pattern += pattern
         elif mycompl == 3 or mycompl == 4:
             pattern = pattern + self.generatePattern()
-        elif mycompl < 5 and mytempo < 40:
             pattern += pattern
         elif mycompl == 5:
             pattern = pattern + self.generatePattern() + self.generatePattern() + self.generatePattern()
-        print(mycompl)
+        print("the pattern is: {} with length {} ".format(pattern, len(pattern)))
         if mygenre == "poppunk" or 40 <= mytempo:
-            self.genChords(mykeyobj, pattern, 0.125, 1)
+            self.genChords(mykeyobj, pattern, 0.125,  self.generateBeat(0.125, 1, mygenre, mycompl))
         else:
-            self.genChords(mykeyobj, pattern, 0.25, 1)
+            self.genChords(mykeyobj, pattern, 0.25, self.generateBeat(0.25, 1, mygenre,mycompl))
         return self.chords_music
 
-    def genChords(self, key, pattern, singlechordlength, chordlength):
+    def genChords(self, key, pattern, singlechordlength, beat):
         print(pattern)
         for basenote in pattern:
-            repeat = int(chordlength/singlechordlength)
-            if singlechordlength <= 0.125:
-                chord_music = self.getChord(key, basenote, singlechordlength, [0,4])
-            else:
-                chord_music = self.getChord(key, basenote, singlechordlength, [0,2,4])
-            for _ in range(repeat):
+            for singlebeat in beat:
+                if singlebeat == 0:
+                    chord_music = note.Rest(duration=duration.Duration(singlechordlength))
+                elif singlechordlength <= 0.125:
+                    chord_music = self.getChord(key, basenote, singlechordlength*singlebeat, [0, 4])
+                else:
+                    chord_music = self.getChord(key, basenote, singlechordlength*singlebeat, [0, 2, 4])
                 self.chords_music.append(chord_music.__deepcopy__())
 
+    def generateBeat(self, singlechordlength, chordlength, mystyle, mycompl):
+
+        if not(chordlength/singlechordlength).is_integer():
+            print("Could not create beat, please have chordlength be a multilple of singlechordlength")
+            raise NotImplementedError
+        if mystyle == "ska":
+            return self.generateSkaBeat(singlechordlength, chordlength, mystyle, mycompl)
+        else:
+            return self.generateGenericBeat(singlechordlength, chordlength, mystyle, mycompl)
+
+
+    def generateGenericBeat(self, singlechordlength, chordlength, mystyle, mycompl):
+        print("generating generic beat")
+        sum = 0
+        beat = []
+        maxlength = chordlength/singlechordlength
+        while sum < maxlength:
+            while(True):
+                currentbeat = rn.choice([0,0, 0 , 0, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 8])
+                currentbeatvalue = 0
+                if currentbeat == 0:
+                    currentbeatvalue = 1
+                else:
+                    currentbeatvalue = currentbeat
+                print("the current sum is {}, the currentbeatvalue is {}, the current maxlength is{}".format(sum, currentbeatvalue, maxlength))
+                if sum+currentbeatvalue <= maxlength:
+                    beat += [int(currentbeat)]
+                    sum  += currentbeatvalue
+                    break
+        print("the beat is {}".format(beat))
+        return beat
+
+    def generateSkaBeat(self, singlechordlength, chordlength, mystyle, mycompl):
+        print("generating ska beat")
+        sum = 0
+        beat = []
+        maxlength = chordlength/singlechordlength
+        current = 0
+        while sum < maxlength:
+            if current == 0:
+                beat += [0]
+                current = 1
+            elif current == 1:
+                beat += [1]
+                current = rn.choice([0,0,1])
+            sum += 1
+        print("the beat is {}".format(beat))
+        return beat
 
     def getChord(self, key, basenote, singlechordlength, chordnotes):
         chord_music = stream.Part()
@@ -66,6 +115,7 @@ class PopChords:
             replaceInterval = rn.choice([2, -2])
             chords[replaceChord] = (chords[replaceChord] + replaceInterval) % 7
             if (len(set(chords)) > 2):
-                print(chords)
                 break
+            else:
+                chords=[]
         return chords

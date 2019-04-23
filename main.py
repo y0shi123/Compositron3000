@@ -19,7 +19,7 @@ def main():
              "mood": 3,
              "compl": 4,
              "tempo": 4,
-             "genre": "pop"}
+             "genre": "ska"}
 
     knowledge["ChosenStruct"] = searchStructures(knowledge["input"])
 

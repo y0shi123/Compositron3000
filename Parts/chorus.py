@@ -19,4 +19,5 @@ class Chorus(generic_part):
         mygenre = mystruct["genre"]
 
         chordGenerator = PopChords()
-        chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre).show()
+        x = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre)
+        x.show()

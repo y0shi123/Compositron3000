@@ -15,6 +15,22 @@
         "key"   : "C",
         "scale" : "major"
 },
+{       "mood"  : "3",
+        "compl" : "4",
+        "tempo" : "4",
+        "parts" : "Chorus, Chorus",
+        "genre" : "ska",
+        "key"   : "D",
+        "scale" : "major"
+},
+        {"mood"  : "3",
+        "compl" : "5",
+        "tempo" : "5",
+        "parts" : "Chorus, Chorus",
+        "genre" : "pop",
+        "key"   : "C",
+        "scale" : "major"
+},
 
 {       "mood" : "2",
         "compl" : "3",
