@@ -1,4 +1,5 @@
 from Parts.generic_part import  *
+from Generators.SkaChords import *
 from Generators.PopChords import *
 import random as rn
 
@@ -18,6 +19,8 @@ class Chorus(generic_part):
         myscale = mystruct["scale"]
         mygenre = mystruct["genre"]
 
-        chordGenerator = PopChords()
-        x = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre)
-        x.show()
+        if mygenre == "ska":
+            chordGenerator = SkaChords()
+        else:
+            chordGenerator = PopChords()
+        chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre).show()
