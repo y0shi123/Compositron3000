@@ -1,13 +1,14 @@
 import random as rn
 from music21 import *
 from Generators.Chords_Util import *
+#import Generators.Chords_Util
 
 class PopChords:
 
     def __init__(self):
         self.chords_music = stream.Part()
 
-    def generate(self, mykey, mycompl, mytempo, myscale, mygenre):
+    def generate(self, mykey, mycompl, mytempo, myscale, mygenre, singlechordlength=0.25):
 
         self.chords_music = stream.Part()
         self.chords_music.append(tempo.MetronomeMark(number=mytempo))
