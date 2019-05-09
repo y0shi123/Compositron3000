@@ -16,7 +16,7 @@ class generic_part:
         for i in range(4):
             mypart.append(note.Note(mykey.pitches[rn.randint(0,7)]))
         self.knowledge["musicparts"][self.name] = mypart
-        print("I am writing Music right now!")
+        #print("I am writing Music right now!")
 
     def whoareyou(self):
         print("I am: {}".format(self.name))

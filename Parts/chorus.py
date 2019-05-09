@@ -34,15 +34,10 @@ class Chorus(generic_part):
         else:
             chordGenerator = PopChords()
         music_chords = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre)
-        #music_chords.show()
+        print(music_chords.quarterLength, end=", ")
+
         melodyGenerator = PopMelody()
-        music_melody = melodyGenerator.generate()
+        music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre, length=music_chords.quarterLength, basenotelength=0.25)
         print(music_melody.quarterLength)
+        music_chords.show()
         music_melody.show()
-        music_melody.append(note.Note("c3", duration=duration.Duration(2)))
-        print(music_melody.quarterLength)
-        music_melody.show()
-        '''music_complete = stream.Stream()
-        music_complete.append(music_melody)
-        music_complete.append(music_chords)
-        music_complete.show()'''

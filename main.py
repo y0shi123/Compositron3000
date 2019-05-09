@@ -41,7 +41,7 @@ def main():
     for string_part in knowledge["ChosenStruct"]["parts"].split(", "):
         if not str(string_part) in knowledge["partobjects"]:
             knowledge["partobjects"][str(string_part)] = globals()[string_part](knowledge, str(string_part))
-            knowledge["partobjects"][string_part].whoareyou()
+            #knowledge["partobjects"][string_part].whoareyou()
             knowledge["partobjects"][string_part].generate()
 
     print("Success")

@@ -14,7 +14,7 @@ class PopChords:
         self.chords_music.append(tempo.MetronomeMark(number=mytempo))
 
         pattern = self.generatePattern(length=4)
-        print(mykey + " " + myscale)
+        #print(mykey + " " + myscale)
         mykeyobj = key.Key(mykey, myscale)
 
         if mycompl == 1 or mycompl == 2:
@@ -25,7 +25,7 @@ class PopChords:
             pattern += pattern
         elif mycompl == 5:
             pattern = pattern + self.generatePattern() + self.generatePattern() + self.generatePattern()
-        print("the pattern is: {} with length {} ".format(pattern, len(pattern)))
+        #print("the pattern is: {} with length {} ".format(pattern, len(pattern)))
         if mygenre == "poppunk" or 40 <= mytempo:
             self.chords_music.append(Chords_Util.genChords(mykeyobj, pattern, 0.125,  self.generateBeat(0.125, 1, mygenre, mycompl),[0,2]))
         else:
@@ -40,7 +40,7 @@ class PopChords:
 
 
     def generateGenericBeat(self, singlechordlength, chordlength, mystyle, mycompl):
-        print("generating generic beat")
+        #print("generating generic beat")
         sum = 0
         beat = []
         maxlength = chordlength/singlechordlength
@@ -57,7 +57,7 @@ class PopChords:
                     beat += [int(currentbeat)]
                     sum  += currentbeatvalue
                     break
-        print("the beat is {}".format(beat))
+        #print("the beat is {}".format(beat))
         return beat
 
     '''
