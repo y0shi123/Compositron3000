@@ -14,7 +14,7 @@ class PopMelody:
                          "G":0}
         self.melody_music = stream.Part()
         self.usedmelodys = []
-        '''self.melodys = [
+        self.melodys = [
              "+0, +2, +4, +6",
              "0, 2, 4, 6",
              "+2, +4, +2, +6",
@@ -44,12 +44,15 @@ class PopMelody:
              "0, p, 0, p",
              "0",
              "p",
+             "p",
+             "p",
              "+0, +2, +4, +2, +5, +4, +2, +4",
              "r,r,r,r,r,r,r,r",
              "r,p,r,p,0,2,4,p",
              "+0, +2, +4, +2, +5, +4, +2, +4, +0, +2, +4, +2, +5, +4, +2, +4",
              "+0, +2, +4, +2, +5, +4, +2, +4, +0, +2, +4, +2, +5, +4, +2, +4,+0, +2, +4, +2, +5, +4, +2, +4, +0, +2, +4, +2, +5, +4, +2, +4",
-        ]'''
+        ]
+        '''
         self.melodys = [
             "b, 1, 2, 4",
             "b, 1, b, 3",
@@ -62,7 +65,7 @@ class PopMelody:
             "0",
             "4, 4",
             "7, 4"
-        ]
+        ]'''
 
     def generateMelodyPattern(self, length):
         if 1 > length:
@@ -71,7 +74,7 @@ class PopMelody:
         if length == 1:
             return "1"
         elif length == 2:
-                results = ["1","1","1",
+                results = ["1",
                            "2,2",
                            ]
         elif length > 8:
@@ -132,8 +135,6 @@ class PopMelody:
     def generateMelody(self, mykey, mycompl, mytempo, myscale, mygenre, length, pattern, basenotelength=0.5):
 
         mykeyobj = key.Key(mykey, myscale)
-        #basenote = 0
-
         for patternentry in pattern.split(","):
 
             currentbasenotelength = basenotelength
@@ -152,13 +153,13 @@ class PopMelody:
                 if "r" in str(chosenmelody):
                     chosenmelody = rn.choice(matchinglength)
             else:
-                tempoadjust = rn.choice(range(6))
+                '''tempoadjust = rn.choice(range(6))
                 if tempoadjust == 0 and (int(patternentry) / 2) == (int(int(patternentry) / 2)):
                     patternentry = int(int(patternentry) / 2)
                     currentbasenotelength = basenotelength * 2
                 if tempoadjust == 1:
                     patternentry = int(patternentry) * 2
-                    currentbasenotelength = basenotelength / 2
+                    currentbasenotelength = basenotelength / 2'''
                 chosenmelody = rn.choice(matchinglength)
 
             self.usedmelodys += [chosenmelody]
@@ -166,20 +167,20 @@ class PopMelody:
             for melodyentry in chosenmelody.split(","):
                 self.melody_music.append(self.parsemelodyentry(melodyentry,currentbasenotelength, mykeyobj))
 
-        return self.melody_music
 
     def generate(self, mykey, mycompl, mytempo, myscale, mygenre, length, basenotelength=0.5 ):
-        self.totallength = length
-        result = self.generateMelodyPattern(length=length)
+        self.melody_music = stream.Part()
+        result = self.generateMelodyPattern(length=length/basenotelength)
+        print(result)
         sum = 0
         for entry in result.split(","):
             sum += int(entry)
-        if sum != length:
+        if sum != length/basenotelength:
             print("Falsche länge :(")
         #print(result)
         self.melody_music.append(tempo.MetronomeMark(number=mytempo))
         self.generateMelody(mykey, mycompl, mytempo, myscale, mygenre, length,result, basenotelength=basenotelength)
-        return self.melody_music
+        return self.melody_music.__deepcopy__()
 
 if __name__== "__main__":
     blubb = PopMelody()

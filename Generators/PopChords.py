@@ -6,6 +6,7 @@ from Generators.Chords_Util import *
 class PopChords:
 
     def __init__(self):
+        pass
         self.chords_music = stream.Part()
 
     def generate(self, mykey, mycompl, mytempo, myscale, mygenre, singlechordlength=0.25):
@@ -30,7 +31,7 @@ class PopChords:
             self.chords_music.append(Chords_Util.genChords(mykeyobj, pattern, 0.125,  self.generateBeat(0.125, 1, mygenre, mycompl),[0,2]))
         else:
             self.chords_music.append(Chords_Util.genChords(mykeyobj, pattern, 0.25, self.generateBeat(0.25, 1, mygenre,mycompl),[0,2,4]))
-        return self.chords_music
+        return self.chords_music.__deepcopy__()
 
     def generateBeat(self, singlechordlength, chordlength, mystyle, mycompl):
         if not(chordlength/singlechordlength).is_integer():
@@ -46,7 +47,10 @@ class PopChords:
         maxlength = chordlength/singlechordlength
         while sum < maxlength:
             while(True):
-                currentbeat = rn.choice([0,0, 0 , 0, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 8])
+                x = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 8]
+                #x = [0,1]
+                #x = [0,0,0,1]
+                currentbeat = rn.choice(x)
                 currentbeatvalue = 0
                 if currentbeat == 0:
                     currentbeatvalue = 1
@@ -101,3 +105,37 @@ class PopChords:
             else:
                 chords=[]
         return chords
+
+    def printtestpattern(self):
+        for _ in range(10):
+            print(self.generatePattern())
+
+
+
+if __name__ == "__main__":
+
+
+     '''mystream = stream.Stream()
+     mystream.insert(0, instrument.Violin())
+     blubb = PopChords()
+     for _ in range(10):
+         beat = blubb.generateGenericBeat(0.125, 2, "pop", "nlubdofn")
+         print(beat)
+         for singlebeat in beat:
+             if singlebeat == 0:
+                 mychord = chord.Chord(["C", "G"], duration=duration.Duration(0.25))
+                 mychord.volume = volume.Volume(velocity=45)
+                 mystream.append((mychord))
+
+                 #mystream.append(note.Rest(duration=duration.Duration(0.25)))
+             else:
+                 mychord2 = chord.Chord(["C", "G"], duration=duration.Duration(0.25 * singlebeat))
+                 mystream.append((mychord2))
+         mystream.append(note.Rest(duration = duration.Duration(8)))
+     #mystream.show('text')
+     mystream.insert(0, tempo.MetronomeMark(number= 60))
+     #mystream.show()
+
+     midi.realtime.StreamPlayer(mystream).play()'''
+
+

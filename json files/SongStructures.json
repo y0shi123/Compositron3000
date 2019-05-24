@@ -1,11 +1,11 @@
 [{
         "mood"  : "3",
         "compl" : "4",
-        "tempo" : "4",
+        "tempo" : "5",
         "parts" : "Chorus, Chorus",
         "genre" : "pop",
-        "key"   : "C",
-        "scale" : "major"
+        "key"   : "E",
+        "scale" : "Major"
 },
 {       "mood"  : "3",
         "compl" : "2",
@@ -14,6 +14,14 @@
         "genre" : "pop",
         "key"   : "C",
         "scale" : "major"
+},
+{       "mood"  : "3",
+        "compl" : "2",
+        "tempo" : "5",
+        "parts" : "Chorus, Chorus",
+        "genre" : "pop",
+        "key"   : "g",
+        "scale" : "Hypolydian"
 },
 {       "mood"  : "3",
         "compl" : "4",

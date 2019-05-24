@@ -4,7 +4,6 @@ import random as rn
 class Chords_Util:
 
     def genChords(key, pattern, singlechordlength, beat, notesInChords):
-        print(pattern)
         chords_music = stream.Part()
         for basenote in pattern:
             for singlebeat in beat:
