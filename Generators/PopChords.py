@@ -27,7 +27,7 @@ class PopChords:
         elif mycompl == 5:
             pattern = pattern + self.generatePattern() + self.generatePattern() + self.generatePattern()
         #print("the pattern is: {} with length {} ".format(pattern, len(pattern)))
-        if mygenre == "poppunk" or 40 <= mytempo:
+        if "punk" in mygenre or 40 <= mytempo:
             self.chords_music.append(Chords_Util.genChords(mykeyobj, pattern, 0.125,  self.generateBeat(0.125, 1, mygenre, mycompl),[0,2]))
         else:
             self.chords_music.append(Chords_Util.genChords(mykeyobj, pattern, 0.25, self.generateBeat(0.25, 1, mygenre,mycompl),[0,2,4]))
@@ -97,6 +97,7 @@ class PopChords:
                     chords += [newchord]
                     currentchord = newchord
                     counter += 1
+            print("pattern before replacement: {}".format(chords))
             replaceChord = rn.choice(range(0, 3))
             replaceInterval = rn.choice([2, -2])
             chords[replaceChord] = (chords[replaceChord] + replaceInterval) % 7
@@ -113,11 +114,9 @@ class PopChords:
 
 
 if __name__ == "__main__":
-
-
-     '''mystream = stream.Stream()
-     mystream.insert(0, instrument.Violin())
      blubb = PopChords()
+     mystream = stream.Stream()
+     mystream.insert(0, instrument.Violin())
      for _ in range(10):
          beat = blubb.generateGenericBeat(0.125, 2, "pop", "nlubdofn")
          print(beat)
@@ -136,6 +135,6 @@ if __name__ == "__main__":
      mystream.insert(0, tempo.MetronomeMark(number= 60))
      #mystream.show()
 
-     midi.realtime.StreamPlayer(mystream).play()'''
+     midi.realtime.StreamPlayer(mystream).play()
 
 

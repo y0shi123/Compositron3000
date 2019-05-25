@@ -52,7 +52,7 @@ class SkaChords:
                 current = 1
             elif current == 1:
                 beat += [1]
-                current = rn.choice([0,0,1])
+                current = rn.choice([0,0,0,1])
             sum += 1
         print("the beat is {}".format(beat))
         return beat
@@ -96,3 +96,39 @@ class SkaChords:
             else:
                 chords=[]
         return chords
+
+if __name__ == "__main__":
+     blubb = SkaChords()
+
+     mystream = stream.Stream()
+     myPart = stream.Part()
+     mystream.insert(0, instrument.ElectricGuitar())
+     for _ in range(10):
+         beat = blubb.generateSkaBeat(0.125, 2, "pop", "nlubdofn")
+         print(beat)
+         for singlebeat in beat:
+             if singlebeat == 0:
+                 #mychord = chord.Chord(["C", "G"], duration=duration.Duration(0.25))
+                 #mychord.volume = volume.Volume(velocity=45)
+                 #mystream.append((mychord))
+                 myPart.append(note.Rest(duration=duration.Duration(0.25)))
+             else:
+                 mychord2 = chord.Chord(["C", "G"], duration=duration.Duration(0.5 * singlebeat))
+                 myPart.append((mychord2))
+         myPart.append(note.Rest(duration=duration.Duration(8)))
+
+
+     n = note.Note("A1", type='quarter')
+     drumPart = stream.Part()
+     drumPart.insert(0, instrument.Woodblock())
+
+     for _ in range(int(myPart.quarterLength)):
+         drumPart.append(n.__deepcopy__())
+
+
+
+     mystream.insert(0, myPart)
+     mystream.insert(0, drumPart)
+     #myPart.show()
+     #drumPart.show()
+     midi.realtime.StreamPlayer(mystream).play()

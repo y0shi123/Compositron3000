@@ -9,8 +9,6 @@ class Chords_Util:
             for singlebeat in beat:
                 if singlebeat == 0:
                     chord_music = note.Rest(duration=duration.Duration(singlechordlength))
-                elif singlechordlength <= 0.125:
-                    chord_music = Chords_Util.getChord(key, basenote, singlechordlength*singlebeat, notesInChords)
                 else:
                     chord_music = Chords_Util.getChord(key, basenote, singlechordlength*singlebeat, notesInChords)
                 chords_music.append(chord_music)
