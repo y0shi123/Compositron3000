@@ -3,8 +3,7 @@ import random as rn
 
 class Chords_Util:
 
-    def genChords(key, pattern, singlechordlength, beat, notesInChords):
-        chords_music = stream.Part()
+    def genChords(key, chords_music, pattern, singlechordlength, beat, notesInChords):
         for basenote in pattern:
             for singlebeat in beat:
                 if singlebeat == 0:
@@ -12,7 +11,7 @@ class Chords_Util:
                 else:
                     chord_music = Chords_Util.getChord(key, basenote, singlechordlength*singlebeat, notesInChords)
                 chords_music.append(chord_music)
-        return chords_music
+
 
     def getChord(key, basenote, singlechordlength, chordnotes):
         chord_music = stream.Part()

@@ -18,8 +18,8 @@ def main():
     knowledge["input"]= {
              "mood": 3,
              "compl": 4,
-             "tempo": 5,
-             "genre": "pop"}
+             "tempo": 3,
+             "genre": "ska"}
 
     knowledge["ChosenStruct"] = searchStructures(knowledge["input"])
 

@@ -7,6 +7,14 @@
         "key"   : "E",
         "scale" : "Major"
 },
+        {"mood"  : "3",
+        "compl" : "4",
+        "tempo" : "3",
+        "parts" : "Chorus, Chorus",
+        "genre" : "ska",
+        "key"   : "D",
+        "scale" : "Major"
+},
 {       "mood"  : "3",
         "compl" : "2",
         "tempo" : "2",

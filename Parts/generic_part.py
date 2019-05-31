@@ -20,3 +20,19 @@ class generic_part:
 
     def whoareyou(self):
         print("I am: {}".format(self.name))
+
+    def flatappend(self, *args):
+        part1 = stream.Part()
+        part2 = stream.Part()
+        count = 0
+        for songpart in args:
+            for singlemeasure in songpart.getElementsByClass(stream.Part).stream():
+                if (count % 2 == 0):
+                    part1.append(singlemeasure.__deepcopy__())
+                else:
+                    part2.append(singlemeasure.__deepcopy__())
+                count = count + 1
+        combined = stream.Stream()
+        combined.append(part1)
+        combined.append(part2)
+        return combined

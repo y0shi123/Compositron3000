@@ -92,7 +92,7 @@ class PopMelody:
 
         res = rn.choice(results)
         # print(res)
-        if res == "1" :
+        if res == "1":
             return str(length)
         else:
             bla = ""
@@ -184,7 +184,7 @@ class PopMelody:
 
 if __name__== "__main__":
     blubb = PopMelody()
-    blubb.generate("C", 3, 4, "Major", "Pop", 64, basenotelength=0.25)
+    blubb.generate("C", 3, 40, "Major", "Pop", 128, basenotelength=0.25)
     #print(blubb.noteusage)
     '''for index, entry in enumerate(blubb.usedmelodys):
         print(entry, end=' // ')

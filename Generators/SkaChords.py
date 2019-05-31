@@ -27,9 +27,9 @@ class SkaChords:
             pattern = pattern + self.generatePattern() + self.generatePattern() + self.generatePattern()
         print("the pattern is: {} with length {} ".format(pattern, len(pattern)))
         if mygenre == "poppunk" or 35 <= mytempo:
-            self.chords_music.append(Chords_Util.genChords(mykeyobj, pattern, 0.125,  self.generateBeat(0.125, 1, mygenre, mycompl), [0, 4]))
+            Chords_Util.genChords(mykeyobj, self.chords_music, pattern, 0.125, self.generateBeat(0.125, 1, mygenre, mycompl), [0, 4])
         else:
-            self.chords_music.append(Chords_Util.genChords(mykeyobj, pattern, 0.25, self.generateBeat(0.25, 1, mygenre ,mycompl), [0, 2, 4]))
+            Chords_Util.genChords(mykeyobj, self.chords_music, pattern, 0.25, self.generateBeat(0.125, 1, mygenre, mycompl), [0, 2, 4])
         return self.chords_music
 
 
@@ -111,7 +111,7 @@ if __name__ == "__main__":
                  #mychord = chord.Chord(["C", "G"], duration=duration.Duration(0.25))
                  #mychord.volume = volume.Volume(velocity=45)
                  #mystream.append((mychord))
-                 myPart.append(note.Rest(duration=duration.Duration(0.25)))
+                 myPart.append(note.Rest(duration=duration.Duration(0.5)))
              else:
                  mychord2 = chord.Chord(["C", "G"], duration=duration.Duration(0.5 * singlebeat))
                  myPart.append((mychord2))
