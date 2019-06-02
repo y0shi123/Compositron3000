@@ -19,8 +19,8 @@ class PunkChords:
         self.genAppegioChords(mykeyobj, self.chords_music, pattern, 0.125,
                             self.generateEightsBeat(singlechordlength=0.125, chordlength=1, mygenre=mygenre,
                                                     mycompl=mycompl),
-                            [0,2,4])
-
+                            [0,2,4,6])
+        self.chords_music.append(note.Rest(duration=duration.Duration(2)))
         self.genMutedChords(mykeyobj, self.chords_music, pattern, 0.125,
                        self.generateEightsBeat(singlechordlength=0.125, chordlength=1, mygenre=mygenre, mycompl=mycompl),
                        [0, 4])
@@ -35,7 +35,7 @@ class PunkChords:
                 if(sum == (maxlength-1)):
                     x = [1]
                 elif(sum < maxlength/2):
-                    x = [0, 1, 1, 1, 2, 2]
+                    x = [0, 1, 1, 1, 1, 1, 2, 2]
                 else:
                     x = [0, 1, 1, 1, 1, 1, 1, 2]
                 currentbeat = rn.choice(x)
@@ -66,18 +66,41 @@ class PunkChords:
 
 
     def genAppegioChords(self, mykey, chords_music, pattern, singlenotelength, beat, notesInChords):
-        muster = []
-        for _ in (range(int(1 / singlenotelength))):
-            muster += [rn.choice(notesInChords)]
+        muster= []
+        while(len(set(muster)) < int(len(notesInChords)/2)):
+            muster = []
+            skipnext = False
+            oldnote = "-1"
+            currentnote = "-1"
+            for counter, _ in enumerate((range(int(1 / singlenotelength)))):
+                if skipnext:
+                    skipnext=False
+                    continue
+                currentnote = str(rn.choice(notesInChords))
+                while(currentnote == oldnote):
+                    currentnote = str(rn.choice(notesInChords))
+                print("currentnote: {} oldnote {}, counter: {} abbruch: {}".format(currentnote, oldnote, counter, int(1/singlenotelength)-1))
+                if (rn.choice(range(3)) == 2 and counter != int(1/singlenotelength)-1):
+                    muster += [currentnote + "d"]
+                    skipnext=True
+                else:
+                    muster += [currentnote]
+                oldnote=currentnote
+
         print(muster)
+
         for basenote in pattern:
             #mychord = self.getChord(key, basenote, singlenotelength, notesInChords)
             for singlenote in muster:
-                mynotename = mykey.pitches[(singlenote+basenote)%7]
-                if (singlenote+basenote>6):
+                filterednote = int(singlenote[0])
+                mynotename = mykey.pitches[(filterednote+basenote)%7]
+                if (filterednote+basenote>6):
                     mynotename.octave = mynotename.implicitOctave +1
                 mynotename.octave += rn.choice([0, 0, 0, 0])
-                mynote = note.Note(mynotename, duration=duration.Duration(singlenotelength))
+                if "d" in singlenote:
+                    mynote = note.Note(mynotename, duration=duration.Duration(singlenotelength*2))
+                else:
+                    mynote = note.Note(mynotename, duration=duration.Duration(singlenotelength))
                 chords_music.append(mynote)
         return chords_music
 
