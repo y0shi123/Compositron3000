@@ -38,7 +38,7 @@ class Chorus(generic_part):
 
         music_chords = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre)
         for thisNote in music_chords.recurse().notes:  # .getElementsByClass(note.Note):
-            thisNote.volume = volume.Volume(velocity=55)
+            thisNote.volume = volume.Volume(velocity=80)
 
         music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre, length=music_chords.quarterLength, basenotelength=rn.choice([0.25]))
         for thisNote in music_melody.recurse().notes:
@@ -65,6 +65,7 @@ class Chorus(generic_part):
 
         music_total = self.flatappend(music_combined, music_combined2)
         music_total.show()
+        music_total.write('midi', "blubb.mid")
         chordacc = stream.Part()
         melodyacc = stream.Part()
         count = 0

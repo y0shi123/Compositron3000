@@ -3,7 +3,7 @@ from jsonLoader import *
 from Parts.allParts import *
 
 environment.set("musicxmlPath", r"C:\Program Files\MuseScore 3\bin\MuseScore3.exe")
-
+#C:\ProgramData\Microsoft\Windows\Start Menu\Programs\TuxGuitar
 
 def main():
 
