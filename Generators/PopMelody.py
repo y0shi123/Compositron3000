@@ -184,7 +184,7 @@ class PopMelody:
 
 if __name__== "__main__":
     blubb = PopMelody()
-    blubb.generate("C", 3, 40, "Major", "Pop", 128, basenotelength=0.25)
+    blubb.generate("C", 3, 40, "Major", "Pop", 32, basenotelength=0.25)
     #print(blubb.noteusage)
     '''for index, entry in enumerate(blubb.usedmelodys):
         print(entry, end=' // ')

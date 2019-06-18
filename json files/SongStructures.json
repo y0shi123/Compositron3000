@@ -1,10 +1,10 @@
 [{
         "mood"  : "3",
-        "compl" : "4",
-        "tempo" : "5",
-        "parts" : "Chorus, Chorus",
-        "genre" : "pop",
-        "key"   : "E",
+        "compl" : "2",
+        "tempo" : "3",
+        "parts" : "PunkPart",
+        "genre" : "punk",
+        "key"   : "D",
         "scale" : "Major"
 },
         {"mood"  : "3",

@@ -136,7 +136,7 @@ if __name__ == "__main__":
          mystream.append(note.Rest(duration = duration.Duration(8)))
      #mystream.show('text')
      mystream.insert(0, tempo.MetronomeMark(number= 60))
-     #mystream.show()
+     # mystream.show()
 
      midi.realtime.StreamPlayer(mystream).play()
 

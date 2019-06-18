@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
      n = note.Note("A1", type='quarter')
      drumPart = stream.Part()
-     drumPart.insert(0, instrument.Woodblock())
+     drumPart.insert(0, instrument.BassDrum())
 
      for _ in range(int(myPart.quarterLength)):
          drumPart.append(n.__deepcopy__())
@@ -131,4 +131,5 @@ if __name__ == "__main__":
      mystream.insert(0, drumPart)
      #myPart.show()
      #drumPart.show()
-     midi.realtime.StreamPlayer(mystream).play()
+     fp = mystream.write('midi', "drumtest.mid")
+     #midi.realtime.StreamPlayer(mystream).play()

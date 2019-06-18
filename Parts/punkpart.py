@@ -4,16 +4,17 @@ from music21 import *
 
 
 # Ohne init in Generators
-from Generators.PopChords import PopChords
-from Generators.PopMelody import PopMelody
+from Generators.PunkChords import PunkChords
+from Generators.PunkMelody import PunkMelody
 from Generators.SkaChords import SkaChords
 
 
 
-class punkpart(generic_part):
+class PunkPart(generic_part):
 
     def __init__(self, passedknowledge, name):
         super().__init__(passedknowledge, name)
+
 
     def generate(self):
         #{'mood': '3', 'compl': '1', 'tempo': '2', 'parts': 'Chorus, Chorus', 'genre': 'pop', 'key': 'C', 'scale': 'dorian'}
@@ -29,12 +30,18 @@ class punkpart(generic_part):
         melodyGenerator = PunkMelody()
 
         music_chords = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre)
-        music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre, length=music_chords.quarterLength, basenotelength=rn.choice([0.25]))
+        melodyGenerator.chords_music = music_chords.__deepcopy__()
+
+        melodyGenerator.melody_music.insert(0, key.Key(mykey))
+        melodyGenerator.followthechords()
+        music_melody = melodyGenerator.melody_music
+        #music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre, length=music_chords.quarterLength, basenotelength=rn.choice([0.25]))
 
         music_combined = stream.Stream()
-        music_combined.insert(0, music_melody)
-        music_combined.insert(0, music_chords)
+        music_combined.insert(0, music_melody.__deepcopy__())
+        music_combined.insert(0, music_chords.__deepcopy__())
 
+        music_chords.show()
         music_combined.show()
         '''
         music_chords2 = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre)
@@ -65,3 +72,8 @@ class punkpart(generic_part):
         music_total.append(chordacc)
         music_total.append(melodyacc)
         music_total.show()'''
+
+
+if __name__== "__main__":
+    blubb = PunkPart()
+    blubb.generate()
