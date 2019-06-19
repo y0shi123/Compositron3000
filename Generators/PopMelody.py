@@ -140,7 +140,7 @@ class PopMelody:
             currentbasenotelength = basenotelength
             matchinglength = list(filter(lambda x: len(x.split(",")) == int(patternentry), self.melodys))
             usedmelodysmatchinglength = list(filter(lambda x: len(x.split(",")) == int(patternentry), self.usedmelodys))
-
+            print(usedmelodysmatchinglength)
 
             if len(matchinglength) == 0 and len(usedmelodysmatchinglength) == 0:
                 print("Cant create melody of this length, exiting")

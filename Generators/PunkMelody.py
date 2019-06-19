@@ -16,8 +16,8 @@ class PunkMelody:
         self.chords_music = None
         self.usedmelodys = []
         self.melodys = [
-            "b, b, b, b",
-            "b,b,b,b,b,b,b,b"
+            "0, 2, 4, 2",
+            "b,+2,+2,r,p,b,2,0"
         ]
         '''self.melodys = [
              "+0, +2, +4, +6",
@@ -68,10 +68,10 @@ class PunkMelody:
             position=self.melody_music.quarterLength
 
         for elem in self.chords_music.getElementsByClass("Chord"):
-            print("CurrentChordTest - Melody QL: {}, currentchordoffset: {}".format(position, elem.getOffsetBySite(self.chords_music)))
+            #print("CurrentChordTest - Melody QL: {}, currentchordoffset: {}".format(position, elem.getOffsetBySite(self.chords_music)))
             if(elem.getOffsetBySite(self.chords_music)+elem.duration.quarterLength > position):
                 currentchord = elem.__deepcopy__()
-                print("Returning: " + str(currentchord))
+                #print("Returning: " + str(currentchord))
                 return currentchord
 
     def currentnote(self,  offset, position=None):
@@ -142,9 +142,14 @@ class PunkMelody:
 
         for patternentry in pattern.split(","):
 
+            print(patternentry)
             currentbasenotelength = singlenotelength
             matchinglength = list(filter(lambda x: len(x.split(",")) == int(patternentry), self.melodys))
             usedmelodysmatchinglength = list(filter(lambda x: len(x.split(",")) == int(patternentry), self.usedmelodys))
+            #print(matchinglength)
+            print(self.usedmelodys)
+            #print(usedmelodysmatchinglength)
+
 
 
             if len(matchinglength) == 0 and len(usedmelodysmatchinglength) == 0:
@@ -152,9 +157,10 @@ class PunkMelody:
                 exit(0)
 
             if (len(usedmelodysmatchinglength) != 0 and rn.randint(0,5) > 1):
+
                 chosenmelody = rn.choice(usedmelodysmatchinglength)
                 #if(len(chosenmelody.split(",")) > 2):
-                #   print("Reusing Melodys " + str(chosenmelody))
+                print("Reusing Melodys " + str(chosenmelody))
 
             else:
                 chosenmelody = rn.choice(matchinglength)
@@ -169,18 +175,36 @@ class PunkMelody:
                                        duration=duration.Duration(singlenotelength))
                     self.melody_music.append(mynote)
                     parsedchosenmelody+=str(parsedmelodyentry)
+                elif "p" in melodyentry:
+                    mynote = note.Rest(duration=duration.Duration(singlenotelength))
+                    self.melody_music.append(mynote)
+                    parsedchosenmelody += "p"
                 elif "r" in melodyentry:
-                    parsedmelodyentry = rn.choice(range(8))
+                    parsedmelodyentry = rn.choice(range(7))
                     mynote = note.Note(mykey.pitches[parsedmelodyentry],
                                        duration=duration.Duration(singlenotelength))
                     self.melody_music.append(mynote)
                     parsedchosenmelody += str(parsedmelodyentry)
                 elif "+" in melodyentry:
                     parsedmelodyentry = self.currentnote(offset=singlenotelength)
-                    mynote = note.Note(self.key.pitches[(parsedmelodyentry + int(melodyentry[-1])) % 8],
+                    mynote = note.Note(self.key.pitches[(parsedmelodyentry + int(melodyentry[-1])) % 7],
                                        duration=duration.Duration(singlenotelength))
-            #print(parsedchosenmelody)
-            self.usedmelodys += [parsedchosenmelody]
+                    self.melody_music.append(mynote)
+                    parsedchosenmelody += str((parsedmelodyentry + int(melodyentry[-1])) % 7)
+                elif "-" in melodyentry:
+                    parsedmelodyentry = self.currentnote(offset=singlenotelength)
+                    mynote = note.Note(self.key.pitches[(parsedmelodyentry - int(melodyentry[-1])) % 7],
+                                       duration=duration.Duration(singlenotelength))
+                    self.melody_music.append(mynote)
+                    parsedchosenmelody += str((parsedmelodyentry - int(melodyentry[-1])) % 7)
+                else:
+                    mynote = note.Note(self.key.pitches[int(melodyentry)],
+                                       duration=duration.Duration(singlenotelength))
+                    self.melody_music.append(mynote)
+                    parsedchosenmelody += str(melodyentry)
+                parsedchosenmelody += ","
+            print(parsedchosenmelody)
+            self.usedmelodys += [parsedchosenmelody[:-1]]
 
 
             '''elif "+" in melodyentry:
@@ -241,17 +265,16 @@ if __name__== "__main__":
 
     blubb = PunkMelody()
     bla = stream.Part()
-    bla.append(chord.Chord("C4 E4 G4", duration=duration.Duration(2)))
-    bla.append(chord.Chord("D4 F4 A4", duration=duration.Duration(2)))
-    bla.append(chord.Chord("E4 G4 B4", duration=duration.Duration(2)))
-    bla.append(chord.Chord("B4 D4 C4", duration=duration.Duration(2)))
+    bla.append(chord.Chord("C4 E4 G4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("D4 F4 A4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("E4 G4 B4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("B4 D4 C4", duration=duration.Duration(4)))
     print(bla.quarterLength)
     #bla.show()
     blubb.chords_music = bla
 
-    blubb.generate(mykey="C", mycompl=3, mytempo=3, myscale="Major", mygenre="pop",length=bla.quarterLength, basenotelength=2)
-    blubb.melody_music.show()
-    '''blubb.followthechords()
+    blubb.generate(mykey="C", mycompl=3, mytempo=3, myscale="Major", mygenre="pop",length=bla.quarterLength, basenotelength=0.5)
+    #blubb.melody_music.show()
 
     mergedstream = stream.Stream()
     mergedstream.insert(0,blubb.chords_music)
