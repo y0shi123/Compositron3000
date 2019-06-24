@@ -7,6 +7,7 @@ from Generators.PopChords import PopChords
 from Generators.PopMelody import PopMelody
 from Generators.SkaChords import SkaChords
 from Generators.PunkChords import PunkChords
+from Generators.PunkMelody import PunkMelody
 
 # Mit init in Generators. In der init werden
 # dann die beiden Module importiert
@@ -36,7 +37,7 @@ class Chorus(generic_part):
             #chordGenerator = PopChords()
             chordGenerator = PunkChords()
 
-        melodyGenerator = PopMelody()
+        melodyGenerator = PunkMelody()
 
         music_chords = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre)
         for thisNote in music_chords.recurse().notes:  # .getElementsByClass(note.Note):
@@ -66,13 +67,11 @@ class Chorus(generic_part):
         music_combined2.insert(0, music_chords2)
 
         music_total = self.flatappend(music_combined, music_combined2)
-        music_total.show()
+        #music_total.show()
         music_total.write('midi', "blubb.mid")
 
         fp = music_total.write('midi', "punktest.mid")
-        chordacc = stream.Part()
-        melodyacc = stream.Part()
-        count = 0
+
         '''for songpart in [music_combined, music_combined2, music_combined.__deepcopy__()]:
             songpart.show('text')
             for singlemeasure in songpart.getElementsByClass(stream.Part).stream():

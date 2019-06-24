@@ -13,16 +13,18 @@ class PunkChords:
         self.chords_music = stream.Part()
 
 
-    def generate(self, mykey = "C", mycompl = 3, mytempo = 40, myscale = "Major", mygenre = "Punk", singlechordlength=0.25, length = 4):
+    def generate(self, mykey = "C", mycompl = 3, mytempo = 120, myscale = "Major", mygenre = "Punk", singlechordlength=0.50, length = 8):
 
         self.chords_music = stream.Part()
         treble = clef.TrebleClef()
         self.chords_music.insert(0, treble)
-        self.chords_music.insert(0, key.Key(mykey))
         self.chords_music.append(tempo.MetronomeMark(number=mytempo))
         #self.chords_music.append(instrument.ElectricGuitar())
-        pattern = self.generatePattern(length=4)
+        pattern = self.generatePattern(length=length/2)
+        pattern += pattern
         mykeyobj = key.Key(mykey, myscale)
+        self.key = mykeyobj
+        self.chords_music.insert(0, self.key)
 
         #self.genAppegioChords(mykey=mykeyobj, chords_music=self.chords_music, pattern=pattern,
         #                      singlenotelength=0.125, length = 4,
@@ -34,8 +36,8 @@ class PunkChords:
 
         #chordlength = anzahl der takte die der akkord spielen soll, singlechordlength = wie klein sind die einzelnen akkorde innerhalb dieses zeitraums.
         # bzw scl = 0.125, cl = 1 könnte 8 acht achtel ergeben
-        self.genMutedChords(mykeyobj, self.chords_music, pattern, 0.125,
-                       self.generateEightsBeat(singlechordlength=0.125, chordlength=1, mygenre=mygenre, mycompl=mycompl),
+        self.genMutedChords(self.key, self.chords_music, pattern, singlechordlength,
+                       self.generateEightsBeat(singlechordlength=singlechordlength, chordlength=4, mygenre=mygenre, mycompl=mycompl),
                        [0, 4])
 
         #self.chords_music.append(note.Rest(duration=duration.Duration(2)))
@@ -48,7 +50,7 @@ class PunkChords:
 
 
 
-    def generateEightsBeat(self, singlechordlength=0.125, chordlength = 1, mygenre = "Punk", mycompl = 3):
+    def generateEightsBeat(self, singlechordlength=0.5, chordlength = 4, mygenre = "Punk", mycompl = 3):
         sum = 0
         beat = []
         maxlength = chordlength/singlechordlength
@@ -74,7 +76,7 @@ class PunkChords:
         return beat
 
 
-    def generateRockBeat(self, singlechordlength= 0.125, chordlength=1, mygenre="punk", mycompl=3):
+    def generateRockBeat(self, singlechordlength= 0.5, chordlength=4, mygenre="punk", mycompl=3):
         #print("generating generic beat")
         sum = 0
         beat = []
@@ -109,7 +111,7 @@ class PunkChords:
                         basenote = int(basenote)
                         chord_music = self.getChord(key, basenote, singlechordlength*singlebeat, notesInChords)
                     else:
-                        whichone = rn.choice([0,1])
+                        whichone = rn.choice([0,0,0,1])
                         currentbasenote = -1
                         if whichone == 0:
                             if "-" in basenote.split(";")[0]:
@@ -261,6 +263,6 @@ if __name__ == "__main__":
     for i in range(5):
         bar = foo.generate('C', 4, 40, "Major", "Punk" )
         print("Länge: {}".format(bar.quarterLength))
-        bar.show()
+        #bar.show()
         #midi.realtime.StreamPlayer(bar).play()
-        #fp = bar.write('midi', "bla{}.mid".format(i))
+        fp = bar.write('midi', "bla{}.mid".format(i))

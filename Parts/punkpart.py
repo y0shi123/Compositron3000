@@ -21,28 +21,35 @@ class PunkPart(generic_part):
 
         mystruct = self.knowledge["ChosenStruct"]
         mycompl = int(mystruct["compl"])
-        mytempo = int(mystruct["tempo"])*10 + rn.randint(-5,5)
+        mytempo = int(mystruct["tempo"])*30
+        print("Tempo: " + str(mytempo))
         mykey = mystruct["key"]
+        self.key = mykey
         myscale = mystruct["scale"]
         mygenre = mystruct["genre"]
 
         chordGenerator = PunkChords()
         melodyGenerator = PunkMelody()
 
-        music_chords = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre)
+        music_chords = chordGenerator.generate(self.key, mycompl, mytempo, myscale, mygenre)
         melodyGenerator.chords_music = music_chords.__deepcopy__()
 
-        melodyGenerator.melody_music.insert(0, key.Key(mykey))
-        melodyGenerator.followthechords()
-        music_melody = melodyGenerator.melody_music
-        #music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre, length=music_chords.quarterLength, basenotelength=rn.choice([0.25]))
+        music_chords.write('midi', "JustChords.mid")
+
+        #melodyGenerator.melody_music.insert(0, key.Key(mykey))
+        print(music_chords.quarterLength)
+        music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre, basenotelength=0.5, length=music_chords.quarterLength)
+
+        music_melody.write('midi', "JustTheMelody.mid")
 
         music_combined = stream.Stream()
         music_combined.insert(0, music_melody.__deepcopy__())
         music_combined.insert(0, music_chords.__deepcopy__())
 
-        music_chords.show()
-        music_combined.show()
+        #music_chords.show()
+
+        music_combined.write('midi', "PunkPart.mid")
+
         '''
         music_chords2 = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre)
         for thisNote in music_chords2.recurse().notes:  # .getElementsByClass(note.Note):
