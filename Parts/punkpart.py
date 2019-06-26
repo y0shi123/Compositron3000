@@ -48,6 +48,7 @@ class PunkPart(generic_part):
 
         #music_chords.show()
 
+        music_combined.show()
         music_combined.write('midi', "PunkPart.mid")
 
         '''
