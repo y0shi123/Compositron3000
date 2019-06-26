@@ -81,7 +81,7 @@ class PunkMelody:
                 #print("Returning: " + str(currentchord))
                 return currentchord
 
-    def currentnote(self, position=None):
+    def currentnote(self, position=None, returnValue = "Value"):
         if self.melody_music is None:
             print("No Chords found in Punkmelody")
             return None
@@ -95,6 +95,8 @@ class PunkMelody:
             #print(str(elem) + str(elem.getOffsetBySite(self.melody_music)) + ", " + str(position))
             if(elem.getOffsetBySite(self.melody_music) + elem.duration.quarterLength >= position):
                 mycurrentnote = elem.__deepcopy__()
+                if returnValue == "Note":
+                    return mycurrentnote
                 for index, pitch in enumerate(self.key.pitches):
                     if pitch.name == mycurrentnote.name:
                         return index
@@ -264,34 +266,68 @@ class PunkMelody:
             print("#################################################")
         return self.melody_music
 
-    def parsemelodyentry(self, melodyentry, basenotelength, mykeyobj):
-        if "p" in melodyentry:
-            mynote = note.Rest(duration=duration.Duration(basenotelength))
-        elif "b" in melodyentry:
-            mynote = note.Note(mykeyobj.pitches[self.basenote],
-                               duration=duration.Duration(basenotelength))
-        elif "r" in melodyentry:
-            randompitch = rn.choice(range(8))
-            mynote = note.Note(mykeyobj.pitches[randompitch],
-                               duration=duration.Duration(basenotelength))
-            self.basenote = randompitch
-        elif "+" in melodyentry:
-            mynote = note.Note(mykeyobj.pitches[(self.basenote + int(melodyentry[-1])) % 8],
-                               duration=duration.Duration(basenotelength))
-            self.basenote = self.basenote + int(melodyentry[-1])
-        elif "-" in melodyentry:
-            mynote = note.Note(mykeyobj.pitches[(self.basenote + int(melodyentry[-1])) % 8],
-                               duration=duration.Duration(basenotelength))
-            self.basenote = self.basenote + int(melodyentry[-1])
-        else:
-            mynote = note.Note(mykeyobj.pitches[(int(melodyentry)) % 8],
-                               duration=duration.Duration(basenotelength))
-            self.basenote = int(melodyentry)
+    def generateWalkMelody(self, mykey, mycompl, mytempo, myscale, mygenre, length, singlenotelength):
+        notesToUse = [1,2,4,5,6]
+        currentNoteValue = rn.choice(notesToUse)
+        steps = [1,1,1,1,2,2,3,4] #,0,0,1,1,1,1, 2, 2,2,5,]
+        direction = 1
 
-        if isinstance(mynote, note.NotRest):
-           self.noteusage[str(mynote.pitch)[0]] += 1
+        while (self.melody_music.quarterLength < length):
+            step = 0
+            if(rn.randint(0,3) == 3):
+                step = rn.choice(steps)
+            currentNoteValue = ((currentNoteValue + direction * step) % 7)
+            currentNote =(note.Note(mykey.pitches[currentNoteValue].name, duration=duration.Duration(singlenotelength)))
+            if (rn.randint(0,10) < 4):
+                direction*= -1
+            if self.melody_music.quarterLength + singlenotelength*2 <= self.chords_music.quarterLength and rn.randint(0,3) == 3:
+                currentNote.duration.quarterLength*=2
+            elif(self.melody_music.quarterLength + singlenotelength/2 == self.chords_music.quarterLength):
+                currentNote.duration.quarterLength/=2
+            #print("currentnote will be: {} with length: {}".format(currentNoteValue, currentNote.duration.quarterLength))
+            self.melody_music.append(currentNote)
+        self.connectChords(singlenotelength)
+        return self.melody_music
 
-        return mynote
+    def connectChords(self, singlenoteLength):
+        allpitches = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
+        keychords = []
+
+        for chord in self.chords_music.getElementsByClass("Chord"):
+            #print(chord.getOffsetBySite(self.chords_music))
+            if(chord.getOffsetBySite(self.chords_music)% 4 == 0):
+                keychords += [chord]
+        print(keychords)
+
+        for index, chord in enumerate(keychords):
+            if index==0:
+                continue
+
+            foundsomething = False
+            predecessor = keychords[index-1]
+
+            for currentpitch in chord.pitches:
+                for oldpitch in predecessor.pitches:
+                    #print(str(allpitches.index(currentpitch.name)) + ", " + str((allpitches.index(oldpitch.name)    )))
+
+                    if allpitches.index(currentpitch.name) == (allpitches.index(oldpitch.name)-1)%12:
+                        print(str(chord) + " und "  + str(predecessor) + " sind verbunden durch :" + str(currentpitch) + " und " + str(oldpitch))
+                        foundsomething = True
+                        currentNote = self.currentnote(chord.getOffsetBySite(self.chords_music),returnValue = "Note")
+                        oldNote     = self.currentnote(chord.getOffsetBySite(self.chords_music)-0.0001, returnValue = "Note")
+                        print(currentNote.getOffsetBySite(self.melody_music))
+                        print(oldNote.getOffsetBySite(self.melody_music))
+                    if foundsomething:
+                        break
+                    if allpitches.index(currentpitch.name) == (allpitches.index(oldpitch.name)+1)%12:
+                        print(str(chord) + " und "  + str(predecessor) + " sind verbunden durch :" + str(currentpitch) + " und " + str(oldpitch))
+                        foundsomething = True
+                    if foundsomething:
+                        break
+                if foundsomething:
+                    break
+
+
 
 
     def generate(self, mykey, mycompl, mytempo, myscale, mygenre, length, basenotelength=0.5 ):
@@ -303,14 +339,20 @@ class PunkMelody:
         #print(self.key)
         #print(int(length/basenotelength))
         pattern = self.generateSimpleMelodyPattern(length=int(length/basenotelength), basenotelength=basenotelength)
-        #print(pattern)
-        return self.generateMelody(mykey = self.key, mycompl=3, mytempo=3, myscale="Major", mygenre="pop", pattern=pattern, length=length, singlenotelength=basenotelength)
+        print(pattern)
+
+        generatedmelody =  self.generateWalkMelody(mykey = self.key, mycompl=3, mytempo=3, myscale="Major", mygenre="pop", length=length, singlenotelength=basenotelength)
+
+        #generatedmelody = self.generateMelody(mykey=self.key, mycompl=3, mytempo=3, myscale="Major", mygenre="pop", pattern=pattern, length=length, singlenotelength=basenotelength)
+        return generatedmelody
+
 
     def keypitchnames(self):
         x = []
         for pitch in self.key.pitches:
             x += [str(pitch.name)]
         return x
+
 
 if __name__== "__main__":
     anote = note.Note()
@@ -325,7 +367,7 @@ if __name__== "__main__":
     #bla.show()
     blubb.chords_music = bla
 
-    blubb.generate(mykey="C", mycompl=3, mytempo=3, myscale="Major", mygenre="pop",length=bla.quarterLength, basenotelength=0.5)
+    blubb.generate(mykey="C", mycompl=3, mytempo=120, myscale="Major", mygenre="pop",length=bla.quarterLength, basenotelength=0.5)
     #blubb.melody_music.show()
 
     mergedstream = stream.Stream()
