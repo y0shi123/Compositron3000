@@ -3,6 +3,50 @@ import random as rn
 import music21
 class PunkMelody:
 
+    def generateMelodyPartsList(self,
+        noteints = ["0","1","2","4","5","6","r", "p", "p", "b", "b", "b"],
+        timeoptions = ["h","d", " ", " "],
+        stepoptions = ["+", "-", " ", " "],
+        steplengths = [0,0,1,1,2,3,4]):
+
+        '''noteints = ["1","2","4","5","6","r", "p", "p", "b", "b", "b"]
+        timeoptions = ["h","d", " ", " "]
+        stepoptions = ["+", "-", " ", " "]
+        steplengths = [0,0,1,1,2,3,4]'''
+        melodys = []
+        for length in [1,2,4,8]*6:
+            melodys += [self.generateMelodyPartListEntry(length=length, noteints=noteints, stepoptions=stepoptions, timeoptions = timeoptions, steplengths=steplengths)]
+        #print(melodys)
+        for entry in melodys:
+            if entry == "d":
+                print("Found something odd")
+        return melodys
+
+    def generateMelodyPartListEntry(self, length, noteints, stepoptions, timeoptions, steplengths):
+
+        melody = ""
+        while(len(melody.split(",")) < length+1):
+            noteint    = rn.choice(noteints)
+            stepoption = rn.choice(stepoptions)
+            timeoption = rn.choice(timeoptions)
+            steplength = rn.choice(steplengths)
+            #print("noteint: {}, stepoption: {}, timeoption: {}, steplength: {}".format(noteint,stepoption,timeoption,steplength))
+            if ("+" in stepoption or "-" in stepoption) and ("h" in timeoption or "d" in timeoption):
+                '''if(rn.randint(0,1) == 0):
+                    melody +=  str(noteint) + str(timeoption) + ","
+                else:
+                    melody += str(stepoption) + str(steplength) + ","'''
+                melody += str(stepoption) + str (steplength) + str(timeoption) + ","
+            elif "+" in stepoption or "-" in stepoption:
+                melody += str(stepoption) + str(steplength) + ","
+            elif "h" in timeoption or "d" in timeoption:
+                melody += str(noteint) + str(timeoption) + ","
+            else:
+                melody += str(noteint) + ","
+        melody = melody[:-1]
+        #print(melody)
+        return melody
+
     def __init__(self):
         self.basenote = 0
         self.useparsedmelodys = True
@@ -16,54 +60,14 @@ class PunkMelody:
         self.melody_music = stream.Part()
         self.chords_music = None
         self.usedmelodys = []
-        self.melodys = ["bd,  , +2d, , +rh, -rh, +r, b",
-                        "bh, rh, +r, -r"]
-        '''[
+        self.melodys = ["bd, ,+2d, ,+rh,-rh,+r,b"]
+
+
+        '''                "bh, rh, +r, -r",
             "bd,  , rd, , +2, +4, -2d, ",
             "b, r,+2,+4,b,+4,-2,0",
-            "bd, ,+2d, ,+4d, ,rd, ",
-
-
-            {"b, rh, +r , -r"]
-            
-        self.melodys = [
-             "+0, +2, +4, +6",
-             "0, 2, 4, 6",
-             "+2, +4, +2, +6",
-             "2, 4, 5, 2",
-             "2, p, 5, p",
-             "+2, +4",
-             "2, r",
-             "2, r",
-             "+3, +4",
-             "+1, +4",
-             "+3, -2",
-             "+6, -4",
-             "+1, 0",
-             "+1, 0, +1, 0",
-             "4, 0, 7, 0",
-             "4, 2, 5, 4",
-             "r, 2",
-             "r, 2",
-             "2, p, 7, p",
-             "p, p, p, p",
-             "p, p, p, p",
-             "p, p",
-             "0,0",
-             "0, r, 0, r",
-             "r, r",
-             "0 ,r, r, 0, 2, 4, r",
-             "0, p, 0, p",
-             "0",
-             "p",
-             "p",
-             "p",
-             "+0, +2, +4, +2, +5, +4, +2, +4",
-             "r,r,r,r,r,r,r,r",
-             "r,p,r,p,0,2,4,p",
-             "+0, +2, +4, +2, +5, +4, +2, +4, +0, +2, +4, +2, +5, +4, +2, +4",
-             "+0, +2, +4, +2, +5, +4, +2, +4, +0, +2, +4, +2, +5, +4, +2, +4,+0, +2, +4, +2, +5, +4, +2, +4, +0, +2, +4, +2, +5, +4, +2, +4",
-        ]'''
+            "bd, ,+2d, ,+4d, ,rd, "]
+        '''
 
     def currentchord(self, offset = 4, position=None):
         if self.chords_music is None or self.chords_music.getElementsByClass("Chord") is None:
@@ -80,7 +84,6 @@ class PunkMelody:
                 return currentchord
         print("No Chord found")
         return chord.Chord("C C# D#")
-
 
     def currentchordfixed(self, offset = 4, position=None):
         if self.chords_music is None or self.chords_music.getElementsByClass("Chord") is None:
@@ -101,7 +104,6 @@ class PunkMelody:
         print("returning last chord found")
         return previous
 
-
     def currentNoteIndex(self, position=None):
         if self.melody_music is None:
             print("No Chords found in Punkmelody")
@@ -119,8 +121,10 @@ class PunkMelody:
                 for index, pitch in enumerate(self.key.pitches):
                     if pitch.name == mycurrentnote.name:
                         return index
-        print("ERROR :( :( :( ")
-        exit(0)
+
+        print("Found no notes at position: {}".format(position))
+        print("returning 0")
+        return 0
 
     def currentNoteObject(self, position=None):
         if self.melody_music is None:
@@ -185,7 +189,7 @@ class PunkMelody:
                    bla = bla + self.generateSimpleMelodyPattern(int(length / int(entry)), basenotelength=basenotelength) + ","
             return bla[:-1]
 
-    def generateMelody(self, mykey, mycompl, mytempo, myscale, mygenre, length, pattern, singlenotelength=0.5):
+    def generateMelodyFromParts(self, mykey, mycompl, mytempo, myscale, mygenre, length, pattern, singlenotelength=0.5):
 
         for patternentry in pattern.split(","):
 
@@ -218,16 +222,29 @@ class PunkMelody:
             parsedchosenmelody = ""
             skipnext = False
             for index, melodyentry in enumerate(chosenmelody.split(",")):
+                #print("current melodyentry: " + str(melodyentry))
                 multiply = 1
                 if skipnext:
+                    #print("skipped")
                     skipnext=False
                     parsedchosenmelody += " ,"
                     continue
                 if "d" in melodyentry:
-                    multiply = 2
-                    melodyentry=melodyentry[:-1]
-                    skipnext = True
-                if "h" in melodyentry:
+                    #if self.melody_music.quarterLength + 2*singlenotelength <= self.chords_music.quarterLength :
+
+                    #print("testing doubling function at position {}: comparing these values: {}, {}".format(
+                    #    self.melody_music.quarterLength,
+                    #    int((self.melody_music.quarterLength + 2*singlenotelength-0.0001)/4), int(self.melody_music.quarterLength/4)))
+                    if int((self.melody_music.quarterLength + 2*singlenotelength-0.001)/4) == int((self.melody_music.quarterLength)/4):
+                        #print("took the if branch")
+                        multiply = 2
+                        melodyentry=melodyentry[:-1]
+                        skipnext = True
+                    else:
+                        #print("took the else branch")
+                        melodyentry = melodyentry[:-1]
+
+                if "h" in melodyentry or self.melody_music.quarterLength + 0.5*singlenotelength == self.chords_music.quarterLength:
                     multiply = 0.5
                     melodyentry=melodyentry[:-1]
 
@@ -236,60 +253,75 @@ class PunkMelody:
                     parsedmelodyentry = self.keypitchnames().index(self.currentchord(offset=1).pitches[0].name)
                     mynote = note.Note(mykey.pitches[int(parsedmelodyentry)],
                                        duration=duration.Duration(singlenotelength))
-                    parsedchosenmelody+=" b"
+                    parsedchosenmelody+="b"
                 elif "p" in melodyentry:
                     mynote = note.Rest(duration=duration.Duration(singlenotelength))
-                    parsedchosenmelody += " p"
+                    parsedchosenmelody += "p"
                 elif "r" in melodyentry and not ("+" in melodyentry or "-" in melodyentry):
                     parsedmelodyentry = rn.choice(range(7))
                     mynote = note.Note(mykey.pitches[parsedmelodyentry],
                                        duration=duration.Duration(singlenotelength))
-                    parsedchosenmelody += " " + str(parsedmelodyentry)
+                    parsedchosenmelody += str(parsedmelodyentry)
                 elif "+" in melodyentry:
                     if "r" in melodyentry:
                         parsedmelodyentry = self.currentNoteIndex()
                         randint = rn.randint(0,6)
                         mynote = note.Note(self.key.pitches[(parsedmelodyentry + randint) % 7],
                                            duration=duration.Duration(singlenotelength))
-                        if (parsedmelodyentry + randint > 6):
-                            mynote.octave = mynote.octave + 1
-                        parsedchosenmelody += " +" + str(randint)
+                        #if (parsedmelodyentry + randint > 6):
+                        #    mynote.octave = mynote.octave + 1
+                        parsedchosenmelody += "+" + str(randint)
                     else:
                         parsedmelodyentry = self.currentNoteIndex()
-                        mynote = note.Note(self.key.pitches[(parsedmelodyentry + int(melodyentry[-1])) % 7],
+                        #print("Currentlz in + path" + str(melodyentry))
+                        #print("Trying to add pitch: {} of key".format((parsedmelodyentry + int(melodyentry[1])%7)))
+                        mynote = note.Note(self.key.pitches[(parsedmelodyentry + int(melodyentry[1])) % 7],
                                            duration=duration.Duration(singlenotelength))
-                        if(parsedmelodyentry + int(melodyentry[-1]) > 6):
-                            mynote.octave = mynote.octave+1
-                        parsedchosenmelody += " +" + melodyentry[-1]
+                        #if(parsedmelodyentry + int(melodyentry[-1]) > 6):
+                        #    mynote.octave = mynote.octave+1
+                        parsedchosenmelody += "+" + melodyentry[-1]
                     #parsedchosenmelody += str((parsedmelodyentry + int(melodyentry[-1])) % 7)
                 elif "-" in melodyentry:
                     if "r" in melodyentry:
                         parsedmelodyentry = self.currentNoteIndex()
                         randint = rn.randint(0,6)
-                        mynote = note.Note(self.key.pitches[(parsedmelodyentry - randint) % 7],
+
+                        mynote = note.Note(self.key.pitches[int(parsedmelodyentry - randint) % 7],
                                            duration=duration.Duration(singlenotelength))
-                        if (parsedmelodyentry - randint > 6):
-                            mynote.octave = mynote.octave - 1
-                        parsedchosenmelody += " -" + str(randint)
+                        #if (parsedmelodyentry - randint < 0):
+                        #    mynote.octave = mynote.octave - 1
+                        parsedchosenmelody += "-" + str(randint)
                     else:
                         parsedmelodyentry = self.currentNoteIndex()
-                        mynote = note.Note(self.key.pitches[(parsedmelodyentry - int(melodyentry[-1])) % 7],
+                        #print("Trying to add pitch: {} of key".format((parsedmelodyentry + int(melodyentry[1]) % 7)))
+                        mynote = note.Note(self.key.pitches[(parsedmelodyentry - int(melodyentry[1])) % 7],
                                           duration=duration.Duration(singlenotelength))
-                        if (parsedmelodyentry - randint > 6):
-                            mynote.octave = mynote.octave - 1
-                        parsedchosenmelody += " -" + melodyentry[-1]
+                        #if (parsedmelodyentry - int(melodyentry[-1]) < 0):
+                        #    mynote.octave = mynote.octave - 1
+                        parsedchosenmelody += "-" + melodyentry[-1]
                         #parsedchosenmelody += str((parsedmelodyentry - int(melodyentry[-1])) % 7)
                 else:
                     mynote = note.Note(self.key.pitches[int(melodyentry)],
                                        duration=duration.Duration(singlenotelength))
                     parsedchosenmelody += str(melodyentry)
-                mynote.duration.quarterLength *= multiply
+
+                '''            if self.melody_music.quarterLength + singlenotelength*2 <= self.chords_music.quarterLength and rn.randint(0,3) == 3:
+                #pass
+                currentNote.duration.quarterLength*=2
+            elif(self.melody_music.quarterLength + singlenotelength/2 == self.chords_music.quarterLength):
+                currentNote.duration.quarterLength/=2
+                '''
+
 
                 if multiply == 2:
                     parsedchosenmelody += "d"
                 if multiply == 0.5:
                     parsedchosenmelody += "h"
-                    self.melody_music.append(mynote.__deepcopy__())
+                    copy = mynote.__deepcopy__()
+                    copy.duration.quarterLength /= 2
+                    if self.melody_music.quarterLength + 0.5*singlenotelength < self.chords_music.quarterLength:
+                        self.melody_music.append(copy)
+                mynote.duration.quarterLength *= multiply
                 self.melody_music.append(mynote)
                 parsedchosenmelody += ","
                 #print(parsedchosenmelody)
@@ -299,11 +331,31 @@ class PunkMelody:
             #print("#################################################")
         return self.melody_music
 
+    def generateOctaveMelodyFromParts(self, mykey, mycompl, mytempo, myscale, mygenre, length, pattern, singlenotelength=0.5):
+
+        print("generating octave melodys")
+        stepoptions = ["+", "+", "+", "-"]
+        if(rn.randint(0,1)==0):
+            stepoptions+=[" "]
+        self.melodys = self.generateMelodyPartsList(noteints = ["p"],
+        timeoptions = ["d"," "," "," "," "],
+        stepoptions = stepoptions,
+        steplengths = [0,0,0,0,0,0,0,1,1,1,1,2,2,2,4,4])
+
+        self.generateMelodyFromParts(mykey, mycompl, mytempo, myscale, mygenre, length, pattern, singlenotelength)
+
+        for mynote in self.melody_music.getElementsByClass("Note"):
+            #print(mynote.getOffsetBySite(self.melody_music))
+            copynote = mynote.__deepcopy__()
+            copynote.pitch.octave+=1
+            self.melody_music.insert(mynote.getOffsetBySite(self.melody_music), copynote)
+
+
     def generateWalkMelody(self, mykey, mycompl, mytempo, myscale, mygenre, length, singlenotelength):
         notesToUse = [1,2,4,5,6]
         currentNoteValue = rn.choice(notesToUse)
         steps = [0]
-        steps = [1,1,1,1,2,3,4]
+        #steps = [1,1,1,1,2,3,4]
         direction = 1
 
         while (self.melody_music.quarterLength < length):
@@ -311,15 +363,15 @@ class PunkMelody:
             #    self.melody_music.append(note.Rest(duration=duration.Duration(singlenotelength)))
 
             step = 0
-            if(rn.randint(0,3) == 3):
+            if(rn.randint(0,2) == 2):
                 step = rn.choice(steps)
             currentNoteValue = ((currentNoteValue + direction * step) % 7)
             currentNote =(note.Note(mykey.pitches[currentNoteValue].name, duration=duration.Duration(singlenotelength)))
             if (rn.randint(0,10) < 4):
                 direction*= -1
             if self.melody_music.quarterLength + singlenotelength*2 <= self.chords_music.quarterLength and rn.randint(0,3) == 3:
-                pass
-                #currentNote.duration.quarterLength*=2
+                #pass
+                currentNote.duration.quarterLength*=2
             elif(self.melody_music.quarterLength + singlenotelength/2 == self.chords_music.quarterLength):
                 currentNote.duration.quarterLength/=2
             #print("currentnote will be: {} with length: {}".format(currentNoteValue, currentNote.duration.quarterLength))
@@ -345,7 +397,7 @@ class PunkMelody:
         for singlechord in keychords:
             basenoteIndex = self.keypitchnames().index(singlechord.pitches[0].name)
             notelist = [self.key.pitches[basenoteIndex], self.key.pitches[(basenoteIndex + 2) % 7],
-                        self.key.pitches[(basenoteIndex + 4) % 7]]
+                        self.key.pitches[(basenoteIndex + 4) % 7], self.key.pitches[(basenoteIndex+7)%7]]
             notelist = list(filter(lambda x: x != self.key.pitches[0], notelist))
             if(len(notelist)==2):
                 notelist += [self.key.pitches[0]]
@@ -403,7 +455,7 @@ class PunkMelody:
             if not foundsomething:
                 print("Nothing was found")
 
-    def generate(self, mykey, mycompl, mytempo, myscale, mygenre, length, basenotelength=0.5 ):
+    def generate(self, mykey, mycompl, mytempo, myscale, mygenre, length, basenotelength ):
         self.melody_music = stream.Part()
         self.key = key.Key(mykey, myscale)
         treble = clef.TrebleClef()
@@ -411,12 +463,12 @@ class PunkMelody:
         self.melody_music.insert(0, tempo.MetronomeMark(number=mytempo))
         #print(self.key)
         #print(int(length/basenotelength))
-        pattern = self.generateSimpleMelodyPattern(length=int((length/2)/basenotelength), basenotelength=basenotelength)
-        #print(pattern)
+        pattern = self.generateSimpleMelodyPattern(length=int((length)/basenotelength), basenotelength=basenotelength)
+        print("melodypattern: " + str(pattern))
 
-        self.generateWalkMelody(mykey = self.key, mycompl=3, mytempo=3, myscale="Major", mygenre="pop", length=length, singlenotelength=basenotelength)
+        #self.generateWalkMelody(mykey = self.key, mycompl=3, mytempo=3, myscale="Major", mygenre="pop", length=length, singlenotelength=basenotelength)
 
-        #self.generateMelody(mykey=self.key, mycompl=3, mytempo=3, myscale="Major", mygenre="pop", pattern=pattern, length=length/2, singlenotelength=basenotelength)
+        self.generateOctaveMelodyFromParts(mykey=self.key, mycompl=3, mytempo=mytempo, myscale="Major", mygenre="pop", pattern=pattern, length=length, singlenotelength=basenotelength)
         return self.melody_music
 
     def keypitchnames(self):
@@ -426,15 +478,16 @@ class PunkMelody:
         return x
 
 if __name__== "__main__":
-    anote = note.Note()
+
 
     blubb = PunkMelody()
+
+    #blubb.melodys = blubb.generateMelodyPartsList()
     bla = stream.Part()
     bla.append(chord.Chord("A4 C4 E4", duration=duration.Duration(4)))
     bla.append(chord.Chord("F4 A4 C4", duration=duration.Duration(4)))
     bla.append(chord.Chord("C4 E4 G4", duration=duration.Duration(4)))
     bla.append(chord.Chord("G4 B4 D4", duration=duration.Duration(4)))
-
     bla.append(chord.Chord("A4 C4 E4", duration=duration.Duration(4)))
     bla.append(chord.Chord("F4 A4 C4", duration=duration.Duration(4)))
     bla.append(chord.Chord("C4 E4 G4", duration=duration.Duration(4)))
@@ -451,4 +504,4 @@ if __name__== "__main__":
     mergedstream.insert(0,blubb.chords_music)
     mergedstream.insert(0,blubb.melody_music)
     mergedstream.show()
-    #print(blubb.generateSinmpleMelodyPattern(length=32))'''
+    #print(blubb.generateSinmpleMelodyPattern(length=32))

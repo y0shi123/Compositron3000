@@ -21,7 +21,7 @@ class PunkChords:
         self.chords_music.append(tempo.MetronomeMark(number=mytempo))
         #self.chords_music.append(instrument.ElectricGuitar())
         pattern = self.generatePattern(length=length/2)
-        pattern += pattern
+        #pattern += pattern
         mykeyobj = key.Key(mykey, myscale)
         self.key = mykeyobj
         self.chords_music.insert(0, self.key)
@@ -36,14 +36,14 @@ class PunkChords:
 
         #chordlength = anzahl der takte die der akkord spielen soll, singlechordlength = wie klein sind die einzelnen akkorde innerhalb dieses zeitraums.
         # bzw scl = 0.125, cl = 1 könnte 8 acht achtel ergeben
-        self.genMutedChords(self.key, self.chords_music, pattern, singlechordlength,
-                       self.generateEightsBeat(singlechordlength=singlechordlength, chordlength=4, mygenre=mygenre, mycompl=mycompl),
-                       [0, 4])
+        #self.genMutedChords(self.key, self.chords_music, pattern, singlechordlength,
+        #               self.generateEightsBeat(singlechordlength=singlechordlength, chordlength=4, mygenre=mygenre, mycompl=mycompl),
+        #               [0, 4])
 
         #self.chords_music.append(note.Rest(duration=duration.Duration(2)))
-        #self.genRockChords(mykeyobj, self.chords_music, pattern, 0.125,
-        #               self.generateRockBeat(singlechordlength=0.125, chordlength=4, mygenre=mygenre, mycompl=mycompl),
-        #               [0, 4])
+        self.genRockChords(mykeyobj, self.chords_music, pattern, 0.5,
+                       self.generateRockBeat(singlechordlength=0.5, chordlength=4, mygenre=mygenre, mycompl=mycompl),
+                       [0, 4])
         return self.chords_music.__deepcopy__()
 
 #\    def genRockChords(self, key, chords_music, pattern, singlechordlength, beat, notesInChords):
@@ -80,7 +80,7 @@ class PunkChords:
         #print("generating generic beat")
         sum = 0
         beat = []
-        maxlength = chordlength/singlechordlength
+        maxlength = int(chordlength/singlechordlength)
         while sum < maxlength:
             while(True):
                 x = [0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 8]
@@ -97,7 +97,7 @@ class PunkChords:
                     beat += [int(currentbeat)]
                     sum  += currentbeatvalue
                     break
-        #print("the beat is {}".format(beat))
+        print("the beat is {}".format(beat))
         return beat
 
 
