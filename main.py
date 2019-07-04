@@ -19,7 +19,7 @@ def main():
              "mood": 3,
              "compl": 2,
              "tempo": 4,
-             "genre": "punk"}
+             "genre": "P2unk"}
 
     knowledge["ChosenStruct"] = searchStructures(knowledge["input"])
 
@@ -42,7 +42,7 @@ def main():
         if not str(string_part) in knowledge["partobjects"]:
             knowledge["partobjects"][str(string_part)] = globals()[string_part](knowledge, str(string_part))
             knowledge["partobjects"][string_part].generate()
-
+    print(knowledge)
     print("Success")
 
 

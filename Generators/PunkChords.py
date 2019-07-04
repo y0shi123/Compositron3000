@@ -19,31 +19,34 @@ class PunkChords:
         treble = clef.TrebleClef()
         self.chords_music.insert(0, treble)
         self.chords_music.append(tempo.MetronomeMark(number=mytempo))
-        #self.chords_music.append(instrument.ElectricGuitar())
-        pattern = self.generatePattern(length=length/2)
-        #pattern += pattern
         mykeyobj = key.Key(mykey, myscale)
         self.key = mykeyobj
         self.chords_music.insert(0, self.key)
 
-        #self.genAppegioChords(mykey=mykeyobj, chords_music=self.chords_music, pattern=pattern,
-        #                      singlenotelength=0.125, length = 4,
-        #                     notesInChords=[0,2,4,6])
-        #print("Länge nach Appegio: {}".format(self.chords_music.quarterLength))
-        #self.chords_music.append(note.Rest(duration=duration.Duration(2)))
-        #self.chords_music.append(instrument.ElectricGuitar())
+        if mycompl >= 3 or length <=4:
+            pattern = self.generatePattern(length=length)
+        else:
+            pattern = self.generatePattern(length=length / 2)
+            pattern += pattern
+        if mygenre == "Acoustic":
+            self.genAppegioChords(mykey=mykeyobj, chords_music=self.chords_music, pattern=pattern,
+                              singlenotelength=0.125, length = length,
+                              notesInChords=[0,2,4,6])
+            #print("Länge nach Appegio: {}".format(self.chords_music.quarterLength))
 
 
         #chordlength = anzahl der takte die der akkord spielen soll, singlechordlength = wie klein sind die einzelnen akkorde innerhalb dieses zeitraums.
         # bzw scl = 0.125, cl = 1 könnte 8 acht achtel ergeben
-        #self.genMutedChords(self.key, self.chords_music, pattern, singlechordlength,
-        #               self.generateEightsBeat(singlechordlength=singlechordlength, chordlength=4, mygenre=mygenre, mycompl=mycompl),
-        #               [0, 4])
 
-        #self.chords_music.append(note.Rest(duration=duration.Duration(2)))
-        self.genRockChords(mykeyobj, self.chords_music, pattern, 0.5,
-                       self.generateRockBeat(singlechordlength=0.5, chordlength=4, mygenre=mygenre, mycompl=mycompl),
-                       [0, 4])
+        elif mygenre == "Punk":
+            self.genMutedChords(self.key, self.chords_music, pattern, singlechordlength,
+                           self.generateEightsBeat(singlechordlength=singlechordlength, chordlength=4, mygenre=mygenre, mycompl=mycompl),
+                              [0, 4])
+
+        else:
+            self.genRockChords(mykeyobj, self.chords_music, pattern, 0.5,
+                           self.generateRockBeat(singlechordlength=0.5, chordlength=4, mygenre=mygenre, mycompl=mycompl),
+                               [0, 4])
         return self.chords_music.__deepcopy__()
 
 #\    def genRockChords(self, key, chords_music, pattern, singlechordlength, beat, notesInChords):
@@ -260,9 +263,9 @@ if __name__ == "__main__":
     #def generate(self, mykey, mycompl, mytempo, myscale, mygenre, singlechordlength=0.25):
 
     foo = PunkChords()
-    for i in range(5):
-        bar = foo.generate('C', 4, 40, "Major", "Punk" )
-        print("Länge: {}".format(bar.quarterLength))
-        #bar.show()
+    #for i in range(5):
+    bar = foo.generate('C', 4, 40, "Major", "Acoustic" )
+    print("Länge: {}".format(bar.quarterLength))
+    bar.show()
         #midi.realtime.StreamPlayer(bar).play()
-        fp = bar.write('midi', "bla{}.mid".format(i))
+        #fp = bar.write('midi', "bla{}.mid".format(i))

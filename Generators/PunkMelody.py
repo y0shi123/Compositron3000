@@ -13,6 +13,7 @@ class PunkMelody:
         timeoptions = ["h","d", " ", " "]
         stepoptions = ["+", "-", " ", " "]
         steplengths = [0,0,1,1,2,3,4]'''
+
         melodys = []
         for length in [1,2,4,8]*6:
             melodys += [self.generateMelodyPartListEntry(length=length, noteints=noteints, stepoptions=stepoptions, timeoptions = timeoptions, steplengths=steplengths)]
@@ -376,7 +377,7 @@ class PunkMelody:
                 currentNote.duration.quarterLength/=2
             #print("currentnote will be: {} with length: {}".format(currentNoteValue, currentNote.duration.quarterLength))
             self.melody_music.append(currentNote)
-        self.connectChords(singlenotelength, length)
+        #self.connectChords(singlenotelength, length)
         return self.melody_music
 
     def connectChords(self, singlenoteLength, length):
@@ -455,20 +456,35 @@ class PunkMelody:
             if not foundsomething:
                 print("Nothing was found")
 
-    def generate(self, mykey, mycompl, mytempo, myscale, mygenre, length, basenotelength ):
+    def generate(self, mykey, mycompl, mytempo, myscale, mygenre, length, basenotelength):
         self.melody_music = stream.Part()
         self.key = key.Key(mykey, myscale)
         treble = clef.TrebleClef()
+        self.melody_music.insert(0, self.key.__deepcopy__())
         self.melody_music.insert(0, treble)
         self.melody_music.insert(0, tempo.MetronomeMark(number=mytempo))
-        #print(self.key)
-        #print(int(length/basenotelength))
+
         pattern = self.generateSimpleMelodyPattern(length=int((length)/basenotelength), basenotelength=basenotelength)
         print("melodypattern: " + str(pattern))
 
-        #self.generateWalkMelody(mykey = self.key, mycompl=3, mytempo=3, myscale="Major", mygenre="pop", length=length, singlenotelength=basenotelength)
+        if mygenre == "Blink" or mygenre == "PopPunk":
+            print("Generating Melody")
+            if mycompl >=3:
+                self.generateMelodyPartsList()
+            self.generateMelodyFromParts(mykey=self.key, mycompl=3, mytempo=mytempo, myscale="Major", mygenre="pop",
+                                           pattern=pattern, length=length, singlenotelength=basenotelength)
+        elif mygenre == "Rise" or mygenre == "Punk":
+            print("Generating Octaves")
+            self.generateOctaveMelodyFromParts(mykey=self.key, mycompl=3, mytempo=mytempo, myscale="Major", mygenre="pop",
+                                           pattern=pattern, length=length, singlenotelength=basenotelength)
+        elif mygenre == "Solo":
+            self.generateWalkMelody(mykey = self.key, mycompl=3, mytempo=3, myscale="Major", mygenre="pop", length=length, singlenotelength=basenotelength)
+            self.connectChords(singlenoteLength=basenotelength, length=length)
+        else:
+            print("Else Path")
+            self.generateMelodyFromParts(mykey=self.key, mycompl=3, mytempo=mytempo, myscale="Major", mygenre="pop",
+                                         pattern=pattern, length=length, singlenotelength=basenotelength)
 
-        self.generateOctaveMelodyFromParts(mykey=self.key, mycompl=3, mytempo=mytempo, myscale="Major", mygenre="pop", pattern=pattern, length=length, singlenotelength=basenotelength)
         return self.melody_music
 
     def keypitchnames(self):
