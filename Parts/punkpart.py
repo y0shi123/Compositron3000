@@ -14,6 +14,7 @@ class PunkPart(generic_part):
 
     def __init__(self, passedknowledge, name):
         super().__init__(passedknowledge, name)
+        self.generated_music = None
 
 
     def generate(self):
@@ -37,8 +38,14 @@ class PunkPart(generic_part):
         music_chords.write('midi', "JustChords.mid")
 
         #melodyGenerator.melody_music.insert(0, key.Key(mykey))
-        print(music_chords.quarterLength)
+        #print(music_chords.quarterLength)
         music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre, basenotelength=0.5, length=music_chords.quarterLength)
+
+        for thisNote in music_chords.recurse().notes:  # .getElementsByClass(note.Note):
+            print(thisNote)
+            thisNote.volume = volume.Volume(velocity=80)
+        for thisNote in music_melody.recurse().notes:
+            thisNote.volume = volume.Volume(velocity=60)
 
         music_melody.write('midi', "JustTheMelody.mid")
 
@@ -50,7 +57,7 @@ class PunkPart(generic_part):
 
         #music_combined.show()
         music_combined.write('midi', "PunkPart.mid")
-
+        self.generated_music = music_combined
         '''
         music_chords2 = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre)
         for thisNote in music_chords2.recurse().notes:  # .getElementsByClass(note.Note):

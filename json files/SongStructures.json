@@ -2,8 +2,17 @@
         "mood"  : "3",
         "compl" : "2",
         "tempo" : "4",
-        "parts" : "PunkPart",
-        "genre" : "Punk",
+        "parts" : "PopPunkChorus",
+        "genre" : "Solo",
+        "key"   : "C",
+        "scale" : "Major"
+},
+        {
+        "mood"  : "3",
+        "compl" : "2",
+        "tempo" : "4",
+        "parts" : "PunkPart, PunkPart",
+        "genre" : "PopPunk",
         "key"   : "C",
         "scale" : "Major"
 },
