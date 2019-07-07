@@ -1,11 +1,27 @@
 [{
         "mood"  : "3",
         "compl" : "2",
-        "tempo" : "4",
+        "tempo" : "2",
         "parts" : "PopPunkChorus",
-        "genre" : "Solo",
-        "key"   : "C",
-        "scale" : "Major"
+        "genre" : "Acoustic",
+        "key"   : "D",
+        "scale" : "Minor"
+},{
+        "mood"  : "3",
+        "compl" : "4",
+        "tempo" : "5",
+        "parts" : "PopPunkChorus",
+        "genre" : "Punk",
+        "key"   : "E#",
+        "scale" : "Minor"
+},{
+        "mood"  : "3",
+        "compl" : "2",
+        "tempo" : "2",
+        "parts" : "PopPunkChorus",
+        "genre" : "Acoustic",
+        "key"   : "D",
+        "scale" : "Minor"
 },
         {
         "mood"  : "3",

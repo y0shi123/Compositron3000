@@ -7,7 +7,7 @@ class PunkMelody:
         noteints = ["0","1","2","4","5","6","r", "p", "p", "b", "b", "b"],
         timeoptions = ["h","d", " ", " "],
         stepoptions = ["+", "-", " ", " "],
-        steplengths = [0,0,1,1,2,3,4], firstnotesettochord=False):
+        steplengths = [0,0,1,1,2,3,4], firstnotesettochord=False, addpauses=False):
 
         '''noteints = ["1","2","4","5","6","r", "p", "p", "b", "b", "b"]
         timeoptions = ["h","d", " ", " "]
@@ -18,6 +18,10 @@ class PunkMelody:
         for length in [1,2,4,8,16]*3:
             melodys += [self.generateMelodyPartListEntry(length=length, noteints=noteints, stepoptions=stepoptions,
                                                          timeoptions = timeoptions, steplengths=steplengths, firstnotesettochord=firstnotesettochord)]
+
+        if addpauses:
+            for _ in range(3):
+                melodys+= ["p", "p,p", "p,p,p,p", "p,p,p,p,p,p,p,p", "p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p"]
 
         for entry in melodys:
             if entry == "d":
@@ -356,8 +360,13 @@ class PunkMelody:
         stepoptions = stepoptions,
         steplengths = [0,0,0,0,0,0,0,0,0,1,1,1,1,2,2])
         self.generateMelodyFromParts(mykey, mycompl, mytempo, myscale, mygenre, length, pattern, singlenotelength)
-        #self.melody_music.show()
+        self.melody_music.show()
         replacewithoctaves = stream.Part()
+
+        treble = clef.TrebleClef()
+        replacewithoctaves.insert(0, self.key.__deepcopy__())
+        replacewithoctaves.insert(0, treble)
+        replacewithoctaves.insert(0, tempo.MetronomeMark(number=mytempo))
         for mynote in self.melody_music.getElementsByClass("Note"):
             copynote = mynote.__deepcopy__()
             copynote.pitch.octave+=1
@@ -496,11 +505,11 @@ class PunkMelody:
             self.generateMelodyFromParts(mykey=self.key, mycompl=mycompl, mytempo=mytempo, myscale=myscale, mygenre=mygenre,
                                            pattern=pattern, length=length, singlenotelength=basenotelength)
         elif mygenre == "Rise" or mygenre == "Punk":
-            #print("Generating Octaves")
-            self.generateOctaveMelodyFromParts(mykey=self.key, mycompl=3, mytempo=mytempo, myscale="Major", mygenre="pop",
+            print("Generating Octaves")
+            self.generateOctaveMelodyFromParts(mykey=self.key, mycompl=mycompl, mytempo=mytempo, myscale=myscale, mygenre=mygenre,
                                            pattern=pattern, length=length, singlenotelength=basenotelength)
         elif mygenre == "Solo":
-            self.generateWalkMelody(mykey = self.key, mycompl=3, mytempo=3, myscale="Major", mygenre="pop", length=length, singlenotelength=basenotelength)
+            self.generateWalkMelody(mykey = self.key, mycompl=mycompl, mytempo=mytempo, myscale=myscale, mygenre=mygenre, length=length, singlenotelength=basenotelength)
             self.connectChords(singlenoteLength=basenotelength, length=length)
         else:
             print("Else Path")

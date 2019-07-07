@@ -16,12 +16,13 @@ def main():
 
     knowledge["musicparts"] = {}
 
-    knowledge["input"]= {
-             "mood": 3,
+    '''       "mood": 3,
              "compl": 2,
-             "tempo": 4,
-             "genre": "Solo"}
+             "tempo": 2,'''
+    knowledge["input"]= {
 
+             "genre": "Punk"}
+    print(knowledge["input"])
     knowledge["ChosenStruct"] = searchStructures(knowledge["input"])
 
     if knowledge["ChosenStruct"] is None:
@@ -55,7 +56,7 @@ def main():
     print(acc)
     result = flatappend(acc)
     #result.show()
-    result.show("text")
+    #result.show("text")
 
     n = note.Note("A1", type='quarter')
     drumPart = stream.Part()

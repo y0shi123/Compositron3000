@@ -30,7 +30,7 @@ class PunkChords:
             pattern += pattern
         if mygenre == "Acoustic":
             self.genAppegioChords(mykey=mykeyobj, chords_music=self.chords_music, pattern=pattern,
-                              singlenotelength=0.125, length = length,
+                              singlenotelength=0.5, length = length,
                               notesInChords=[0,2,4,6])
             #print("Länge nach Appegio: {}".format(self.chords_music.quarterLength))
 
@@ -48,10 +48,6 @@ class PunkChords:
                            self.generateRockBeat(singlechordlength=0.5, chordlength=4, mygenre=mygenre, mycompl=mycompl),
                                [0, 4])
         return self.chords_music.__deepcopy__()
-
-#\    def genRockChords(self, key, chords_music, pattern, singlechordlength, beat, notesInChords):
-
-
 
     def generateEightsBeat(self, singlechordlength=0.5, chordlength = 4, mygenre = "Punk", mycompl = 3):
         sum = 0
@@ -78,7 +74,6 @@ class PunkChords:
                     break
         return beat
 
-
     def generateRockBeat(self, singlechordlength= 0.5, chordlength=4, mygenre="punk", mycompl=3):
         #print("generating generic beat")
         sum = 0
@@ -102,7 +97,6 @@ class PunkChords:
                     break
         print("the beat is {}".format(beat))
         return beat
-
 
     def genMutedChords(self, key, chords_music, pattern, singlechordlength, beat, notesInChords):
         for basenote in pattern:
@@ -210,7 +204,6 @@ class PunkChords:
                     chord_music = self.getChord(key, currentbasenote, singlechordlength*singlebeat, notesInChords)
                 chords_music.append(chord_music)
 
-
     def getChord(self, key, basenote, singlechordlength, chordnotes):
         mychord = chord.Chord(duration=duration.Duration(singlechordlength))
         mypitches = key.pitches
@@ -223,7 +216,6 @@ class PunkChords:
                mypitch.octave -= 1
                mychord.add(mypitch)
         return mychord
-
 
     def generatePattern(self, length=4, mycompl=3):
         chords = []
