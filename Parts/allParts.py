@@ -4,3 +4,5 @@ from Parts.chorus import *
 from Parts.bridge import *
 from Parts.punkpart import *
 from Parts.PopPunkChorus import *
+from Parts.PopPunkVerse import *
+from Parts.PopPunkSolo import *

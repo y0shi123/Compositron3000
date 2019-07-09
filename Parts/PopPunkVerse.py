@@ -6,18 +6,15 @@ from music21 import *
 # Ohne init in Generators
 from Generators.PunkChords import PunkChords
 from Generators.PunkMelody import PunkMelody
-from Generators.SkaChords import SkaChords
 
 
-
-class PopPunkChorus(generic_part):
+class PopPunkVerse(generic_part):
 
     def __init__(self, passedknowledge, name):
         super().__init__(passedknowledge, name)
         self.generated_music = None
 
     def generate(self):
-
 
         mystruct = self.knowledge["ChosenStruct"]
         mycompl = int(mystruct["compl"])
@@ -33,8 +30,8 @@ class PopPunkChorus(generic_part):
         melodyGenerator = PunkMelody()
 
         length = 4
-        #if mycompl == 5:
-        #    length == 8
+        if mycompl == 5:
+            length == 8
 
         if mytempo >= 110:
             music_chords = chordGenerator.generate(self.key, mycompl, mytempo, myscale, mygenre="Punk", length = length)
@@ -42,16 +39,17 @@ class PopPunkChorus(generic_part):
             music_chords = chordGenerator.generate(self.key, mycompl, mytempo, myscale, mygenre="Acoustic", length = length)
         else:
             music_chords = chordGenerator.generate(self.key, mycompl, mytempo, myscale, mygenre="Rock", length = length)
+
         music_chords.write('midi', "JustTheChords.mid")
 
         melodyGenerator.chords_music = music_chords.__deepcopy__()
 
 
-        music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre=mygenre, basenotelength=1, length=music_chords.quarterLength)
+        music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre="Solo", basenotelength=1, length=music_chords.quarterLength)
         music_melody.write('midi', "JustTheMelody.mid")
 
         for thisNote in music_chords.recurse().notes:  # .getElementsByClass(note.Note):
-            print(thisNote)
+            #print(thisNote)
             thisNote.volume = volume.Volume(velocity=80)
         for thisNote in music_melody.recurse().notes:
             thisNote.volume = volume.Volume(velocity=50)
@@ -62,7 +60,3 @@ class PopPunkChorus(generic_part):
         music_combined = self.flatappend(music_combined, music_combined.__deepcopy__())
         self.generated_music = music_combined
 
-
-if __name__== "__main__":
-    blubb = PopPunkChorus()
-    blubb.generate()

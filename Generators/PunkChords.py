@@ -31,7 +31,7 @@ class PunkChords:
         if mygenre == "Acoustic":
             self.genAppegioChords(mykey=mykeyobj, chords_music=self.chords_music, pattern=pattern,
                               singlenotelength=0.5, length = length,
-                              notesInChords=[0,2,4,6])
+                              notesInChords=[0,1,2,4])
             #print("Länge nach Appegio: {}".format(self.chords_music.quarterLength))
 
 

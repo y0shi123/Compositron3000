@@ -2,7 +2,7 @@
         "mood"  : "3",
         "compl" : "2",
         "tempo" : "2",
-        "parts" : "PopPunkChorus",
+        "parts" : "PopPunkVerse, PopPunkChorus",
         "genre" : "Acoustic",
         "key"   : "D",
         "scale" : "Minor"
@@ -10,9 +10,9 @@
         "mood"  : "3",
         "compl" : "4",
         "tempo" : "5",
-        "parts" : "PopPunkChorus",
+        "parts" : "PopPunkVerse, PopPunkChorus, PopPunkVerse, PopPunkChorus, PopPunkSolo",
         "genre" : "Punk",
-        "key"   : "E#",
+        "key"   : "C",
         "scale" : "Minor"
 },{
         "mood"  : "3",

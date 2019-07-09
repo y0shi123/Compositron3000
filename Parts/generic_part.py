@@ -26,13 +26,21 @@ class generic_part:
         part2 = stream.Part()
         count = 0
         for songpart in args:
-            for singlemeasure in songpart.getElementsByClass(stream.Part).stream():
+            for singlemeasure in songpart.getElementsByClass(stream.Part):
                 if (count % 2 == 0):
                     part1.append(singlemeasure.__deepcopy__())
                 else:
                     part2.append(singlemeasure.__deepcopy__())
                 count = count + 1
         combined = stream.Stream()
-        combined.append(part1)
-        combined.append(part2)
+        combined.append(part1.flat)
+        combined.append(part2.flat)
+        '''part1.show('text')
+        part1.flat.show('text')
+        #part1.show()
+        part2.show('text')
+        #part2.show()'''
+        print("Merged Streams:")
+        combined.show('text')
+        combined.show()
         return combined

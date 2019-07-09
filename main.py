@@ -47,12 +47,23 @@ def main():
         #else:
         #    print("Repeat")
 
-
+    #print("Test")
+    #print(knowledge["partobjects"])
+    #print(knowledge["ChosenStruct"]["parts"])
     acc = []
-    for part in knowledge["partobjects"]:
-        print(part)
+    counter = 0
+    for part in knowledge["ChosenStruct"]["parts"].split(", "):
+        print(counter)
         #knowledge["partobjects"][part].generated_music.show()
         acc += [knowledge["partobjects"][part].generated_music.__deepcopy__()]
+        print(acc)
+        counter+=1
+
+
+    for part in knowledge["partobjects"]:
+        print(knowledge["partobjects"][part].name)
+
+    print("LALALA")
     print(acc)
     result = flatappend(acc)
     #result.show()
