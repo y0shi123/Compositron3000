@@ -30,15 +30,8 @@ class PopPunkSolo(generic_part):
         for part in self.knowledge["partobjects"]:
             if "Chorus" in self.knowledge["partobjects"][part].name:
                 copychords = self.knowledge["partobjects"][part].generated_music.__deepcopy__()
-                print("Bin hier")
-                copychords.show()
-                copychords.show('text')
-                print("Wer noch")
                 copychords = list(copychords.getElementsByClass(["Part"]))[1].__deepcopy__()
-                copychords.show()
-                copychords.show('text')
-                print("Bla")
-
+        #copychords.show()
 
         melodyGenerator = PunkMelody()
 
@@ -56,6 +49,5 @@ class PopPunkSolo(generic_part):
         music_combined = stream.Stream()
         music_combined.insert(0, music_melody.__deepcopy__())
         music_combined.insert(0, copychords.__deepcopy__())
-        music_combined = self.flatappend(music_combined, music_combined.__deepcopy__())
         self.generated_music = music_combined
 

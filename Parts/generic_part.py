@@ -40,7 +40,7 @@ class generic_part:
         #part1.show()
         part2.show('text')
         #part2.show()'''
-        print("Merged Streams:")
-        combined.show('text')
-        combined.show()
+        #print("Merged Streams:")
+        #combined.show('text')
+        #combined.show()
         return combined
