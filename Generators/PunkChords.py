@@ -47,6 +47,10 @@ class PunkChords:
             self.genRockChords(mykeyobj, self.chords_music, pattern, 0.5,
                            self.generateRockBeat(singlechordlength=0.5, chordlength=4, mygenre=mygenre, mycompl=mycompl),
                                [0, 4])
+
+        for elem in self.chords_music.flat.getElementsByClass(["Chord", "Note"]):
+            for pitch in elem.pitches:
+                pitch.octave = pitch.implicitOctave-1
         return self.chords_music.__deepcopy__()
 
     def generateEightsBeat(self, singlechordlength=0.5, chordlength = 4, mygenre = "Punk", mycompl = 3):

@@ -56,6 +56,7 @@ class PopPunkChorus(generic_part):
         for thisNote in music_melody.recurse().notes:
             thisNote.volume = volume.Volume(velocity=50)
 
+
         music_combined = stream.Stream()
         music_combined.insert(0, music_melody.__deepcopy__())
         music_combined.insert(0, music_chords.__deepcopy__())

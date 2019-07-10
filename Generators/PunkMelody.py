@@ -392,7 +392,7 @@ class PunkMelody:
         notesToUse = [1,2,4,5,6]
         currentNoteValue = rn.choice(notesToUse)
         #steps = [0]
-        steps = [0,0,1,1,1,1,2,3,4]
+        steps = [1,1,1,1,2,3,4]
         direction = 1
 
         while (self.melody_music.quarterLength < length):
@@ -400,7 +400,7 @@ class PunkMelody:
             #    self.melody_music.append(note.Rest(duration=duration.Duration(singlenotelength)))
 
             step = 0
-            if(rn.randint(0,2) == 2):
+            if(rn.randint(0,1) == 1):
                 step = rn.choice(steps)
             currentNoteValue = ((currentNoteValue + direction * step) % 7)
             currentNote =(note.Note(mykey.pitches[currentNoteValue].name, duration=duration.Duration(singlenotelength)))
@@ -514,6 +514,10 @@ class PunkMelody:
             print("Generating Octaves")
             self.generateOctaveMelodyFromParts(mykey=self.key, mycompl=mycompl, mytempo=mytempo, myscale=myscale, mygenre=mygenre,
                                            pattern=pattern, length=length, singlenotelength=basenotelength)
+
+            for elem in self.melody_music.flat.getElementsByClass(["Chord", "Note"]):
+                for pitch in elem.pitches:
+                    pitch.octave = pitch.implicitOctave - 1
         elif mygenre == "Solo":
             self.generateWalkMelody(mykey = self.key, mycompl=mycompl, mytempo=mytempo, myscale=myscale, mygenre=mygenre, length=length, singlenotelength=basenotelength)
             self.connectChords(singlenoteLength=basenotelength, length=length)

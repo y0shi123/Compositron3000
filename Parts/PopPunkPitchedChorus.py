@@ -33,6 +33,6 @@ class PopPunkPitchedChorus(generic_part):
         for elem in copychorus.flat.getElementsByClass(["Chord", "Note"]):
             for pitch in elem.pitches:
                 #pitch.octave = pitch.implicitOctave+1
-                pitch.transpose(2, inPlace=True)
+                pitch.transpose(3, inPlace=True)
         copychorus.show('text')
         self.generated_music = copychorus
