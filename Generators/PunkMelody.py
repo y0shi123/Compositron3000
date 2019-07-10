@@ -418,7 +418,8 @@ class PunkMelody:
 
     def connectChords(self, singlenoteLength, length):
         #print("Connecting Chords..")
-        allpitches = ["A", "A-", "B", "B-", "C", "D", "D-", "E", "E-", "F", "G", "G-"]
+        #allpitches = ["A", "A-", "B", "B-", "C", "D", "D-", "E", "E-", "F", "G", "G-"]
+        allpitches = ["A-", "A", "B-", "B", "C", "D-", "D", "E-", "E", "F", "G-", "G"]
         keychords = []
         fullchords = []
         fullchordsstream = stream.Stream()

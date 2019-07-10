@@ -6,3 +6,5 @@ from Parts.punkpart import *
 from Parts.PopPunkChorus import *
 from Parts.PopPunkVerse import *
 from Parts.PopPunkSolo import *
+from Parts.PopPunkPreChorus import *
+from Parts.PopPunkPitchedChorus import *

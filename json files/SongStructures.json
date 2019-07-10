@@ -10,7 +10,7 @@
         "mood"  : "3",
         "compl" : "4",
         "tempo" : "5",
-        "parts" : "PopPunkVerse, PopPunkChorus, PopPunkVerse, PopPunkChorus, PopPunkSolo",
+        "parts" : "PopPunkVerse, PopPunkPreChorus, PopPunkChorus, PopPunkVerse, PopPunkPreChorus, PopPunkChorus, PopPunkSolo, PopPunkChorus, PopPunkPitchedChorus",
         "genre" : "Punk",
         "key"   : "C",
         "scale" : "Minor"

@@ -28,7 +28,7 @@ class PopPunkSolo(generic_part):
 
         copychords = None
         for part in self.knowledge["partobjects"]:
-            if "Chorus" in self.knowledge["partobjects"][part].name:
+            if "PopPunkChorus" in self.knowledge["partobjects"][part].name:
                 copychords = self.knowledge["partobjects"][part].generated_music.__deepcopy__()
                 copychords = list(copychords.getElementsByClass(["Part"]))[1].__deepcopy__()
         #copychords.show()

@@ -40,7 +40,7 @@ def main():
         exit(0)
 
     for string_part in knowledge["ChosenStruct"]["parts"].split(", "):
-        print(string_part)
+        #print(string_part)
         if not str(string_part) in knowledge["partobjects"]:
             knowledge["partobjects"][str(string_part)] = copy.deepcopy(globals()[string_part](knowledge, str(string_part)))
             knowledge["partobjects"][string_part].generate()
@@ -53,18 +53,18 @@ def main():
     acc = []
     counter = 0
     for part in knowledge["ChosenStruct"]["parts"].split(", "):
-        print(counter)
+        #print(counter)
         #knowledge["partobjects"][part].generated_music.show()
         acc += [knowledge["partobjects"][part].generated_music.__deepcopy__()]
-        print(acc)
+        #print(acc)
         counter+=1
 
 
-    for part in knowledge["partobjects"]:
-        print(knowledge["partobjects"][part].name)
+    #for part in knowledge["partobjects"]:
+    #    print(knowledge["partobjects"][part].name)
 
-    print("LALALA")
-    print(acc)
+    #print("LALALA")
+    #print(acc)
     result = flatappend(acc)
     #result.show()
     #result.show("text")
