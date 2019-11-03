@@ -14,15 +14,17 @@ def main():
 
     knowledge["partobjects"] = {}
 
-    knowledge["musicparts"] = {}
+    #knowledge["musicparts"] = {}
 
-    '''       "mood": 3,
-             "compl": 2,
-             "tempo": 2,'''
     knowledge["input"]= {
+    }
 
-             "genre": "Punk"}
-    print(knowledge["input"])
+    knowledge["input"]["mood"] = input("Gewünschte Stimmung (1(traurig) bis 5(fröhlich) eingeben")
+    knowledge["input"]["compl"] = input("Gewünschte Komplexität (1(simpel) bis 5(komplex) eingeben")
+    knowledge["input"]["tempo"] = input("Gewünschtes Tempo (1(langsan) bis 5(Schnell) eingeben")
+    knowledge["input"]["genre"] = input("Gewünschtes Genre eingeben")
+    knowledge["input"]["scale"] = input("Gewünschtes Tonleiterart eingeben")
+
     knowledge["ChosenStruct"] = searchStructures(knowledge["input"])
 
     if knowledge["ChosenStruct"] is None:
@@ -39,7 +41,7 @@ def main():
         print(x)
         exit(0)
 
-    for string_part in knowledge["ChosenStruct"]["parts"].split(", "):
+    for string_part in knowledge["ChosenStruct"]["parts"]:
         #print(string_part)
         if not str(string_part) in knowledge["partobjects"]:
             knowledge["partobjects"][str(string_part)] = copy.deepcopy(globals()[string_part](knowledge, str(string_part)))
@@ -52,7 +54,7 @@ def main():
     #print(knowledge["ChosenStruct"]["parts"])
     acc = []
     counter = 0
-    for part in knowledge["ChosenStruct"]["parts"].split(", "):
+    for part in knowledge["ChosenStruct"]["parts"]:
         #print(counter)
         #knowledge["partobjects"][part].generated_music.show()
         acc += [knowledge["partobjects"][part].generated_music.__deepcopy__()]
@@ -76,7 +78,7 @@ def main():
     #for _ in range(int(result.quarterLength)):
     while(drumPart.quarterLength<result.quarterLength):
         drumPart.append(n.__deepcopy__())
-    #result.insert(0, drumPart)
+    result.insert(0, drumPart)
     result.write('midi', "CombinedSong.mid")
     print("Success")
 
@@ -89,7 +91,7 @@ def searchStructures(userInput):
     for entry in myJsonLoader.SongStructures:
         foundentry = True
         for a in entry:
-            if a in userInput and not str(entry[a]) == str(userInput[a]):
+            if a in userInput and userInput[a]!= "" and not str(entry[a]) == str(userInput[a]):
                 foundentry = False
         if foundentry:
             return entry
@@ -115,7 +117,7 @@ def searchParts(partList):
 
     myJsonloader = JsonLoader()
 
-    for part in partList.split(", "):
+    for part in partList:
         fountpart = False
         for entry in myJsonloader.PartsList["Available"].split(", "):
             if str(entry) == str(part):

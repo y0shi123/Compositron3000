@@ -30,8 +30,9 @@ class PunkChords:
             pattern += pattern
         if mygenre == "Acoustic":
             self.genAppegioChords(mykey=mykeyobj, chords_music=self.chords_music, pattern=pattern,
-                              singlenotelength=0.5, length = length,
-                              notesInChords=[0,1,2,4])
+                              singlenotelength=singlechordlength, length = length,
+                              notesInChords=[0,2,4])
+
             #print("Länge nach Appegio: {}".format(self.chords_music.quarterLength))
 
 
@@ -133,7 +134,6 @@ class PunkChords:
                         chord_music.volume = volume.Volume(velocity=40)
                 chords_music.append(chord_music)
 
-
     def genAppegioChords(self, mykey, chords_music, pattern, singlenotelength, length, notesInChords):
         print("Länge: {}, SingleNoteLänge: {} Bruch: {}".format(length, singlenotelength, int(length/singlenotelength)))
         muster= []
@@ -178,6 +178,7 @@ class PunkChords:
                     mynote = note.Note(mynotename, duration=duration.Duration(singlenotelength*2))
                 else:
                     mynote = note.Note(mynotename, duration=duration.Duration(singlenotelength))
+                mynote.volume=(volume.Volume(velocity=80))
                 mynote.pitch.octave-=1
                 chords_music.append(mynote)
         return chords_music
@@ -241,7 +242,8 @@ class PunkChords:
                 chords[replaceChord] = str((int(chords[replaceChord]) + replaceInterval) % 7)
             except:
                 pass
-            if (len(set(chords)) > 2):
+            #Chords based on the 7th note are problematic since they dont have a real dominant note, so in this simple method its best to just avoid them.
+            if (len(set(chords)) > 2 and not "6" in str(set(chords)) and not "-1" in str(set(chords))):
                 break
             else:
                 chords=[]
@@ -255,13 +257,26 @@ class PunkChords:
 
 
 if __name__ == "__main__":
+
     # {'mood': '3', 'compl': '1', 'tempo': '2', 'parts': 'Chorus, Chorus', 'genre': 'pop', 'key': 'C', 'scale': 'dorian'}
     #def generate(self, mykey, mycompl, mytempo, myscale, mygenre, singlechordlength=0.25):
-
+    bar = stream.Stream()
     foo = PunkChords()
+
     #for i in range(5):
-    bar = foo.generate('C', 4, 40, "Major", "Acoustic" )
+    bar.insert(0, foo.generate('D', 4, 140, "Major", "Punk", singlechordlength=0.5 ))
+    #bar.show()
     print("Länge: {}".format(bar.quarterLength))
-    bar.show()
-        #midi.realtime.StreamPlayer(bar).play()
-        #fp = bar.write('midi', "bla{}.mid".format(i))
+
+    n = note.Note("A1", type='quarter')
+    drumPart = stream.Part()
+    drumPart.insert(0, instrument.BassDrum())
+
+    while(drumPart.quarterLength<bar.quarterLength):
+        drumPart.append(n.__deepcopy__())
+    bar.insert(0, drumPart)
+    bar.show("text")
+
+    bar.write('midi', "Chords.mid")
+    print("Success")
+

@@ -33,13 +33,18 @@ class PopPunkPreChorus(generic_part):
         melodyGenerator = PunkMelody()
 
         length = 4
+        singlechordlength = rn.choice([0.5, 1])
+
+        if(rn.randint(0,4) ==4 and mycompl > 2):
+            print("!!!!!!!!!!!!!!            Acoustic PreChorus!!!                 !!!!!!!!!!!!!!!!!!!!!")
+            mygenre = "Acoustic"
 
         if mytempo >= 110:
-            music_chords = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre="Punk", length = length)
+            music_chords = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre="Punk", length = length, singlechordlength=singlechordlength)
         elif mytempo <= 70 or mygenre=="Acoustic" or mygenre=="Ballad":
             music_chords = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre="Acoustic", length = length)
         else:
-            music_chords = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre="Rock", length = length)
+            music_chords = chordGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre="Rock", length = length, singlechordlength=singlechordlength)
 
         melodyGenerator.chords_music = music_chords.__deepcopy__()
 
@@ -55,8 +60,10 @@ class PopPunkPreChorus(generic_part):
             thisNote.volume = volume.Volume(velocity=80)
 
         music_combined = stream.Stream()
+
         music_combined.insert(0, music_melody.__deepcopy__())
         music_combined.insert(0, music_chords.__deepcopy__())
+
         self.generated_music = music_combined
 
 

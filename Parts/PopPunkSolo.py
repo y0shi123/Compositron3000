@@ -17,6 +17,7 @@ class PopPunkSolo(generic_part):
     def generate(self):
 
         mystruct = self.knowledge["ChosenStruct"]
+        mymood = int(mystruct["mood"])
         mycompl = int(mystruct["compl"])
         mytempo = int(mystruct["tempo"])*30
         mytempo = max(mytempo, 60)
@@ -39,7 +40,7 @@ class PopPunkSolo(generic_part):
 
         melodyGenerator.chords_music = copychords.__deepcopy__()
         #melodyGenerator.chords_music.show()
-        music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre="Solo", basenotelength=0.5, length=copychords.quarterLength)
+        music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mymood=mymood, mygenre="Solo", basenotelength=0.5, length=copychords.quarterLength)
 
         for thisNote in copychords.recurse().notes:  # .getElementsByClass(note.Note):
             thisNote.volume = volume.Volume(velocity=80)

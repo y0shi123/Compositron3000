@@ -14,9 +14,11 @@ class PopPunkVerse(generic_part):
         super().__init__(passedknowledge, name)
         self.generated_music = None
 
+
     def generate(self):
 
         mystruct = self.knowledge["ChosenStruct"]
+        mymood  = int(mystruct["mood"])
         mycompl = int(mystruct["compl"])
         mytempo = int(mystruct["tempo"])*30
         mytempo = max(mytempo, 60)
@@ -25,7 +27,6 @@ class PopPunkVerse(generic_part):
         self.key = mykey
         myscale = mystruct["scale"]
         mygenre = mystruct["genre"]
-
         chordGenerator = PunkChords()
         melodyGenerator = PunkMelody()
 
@@ -44,10 +45,18 @@ class PopPunkVerse(generic_part):
 
         melodyGenerator.chords_music = music_chords.__deepcopy__()
 
+        if mytempo <= 70 or mygenre == "Acoustic" or mygenre == "Ballad":
+            music_melody = stream.Part()
+            mykeyobj = key.Key(mykey, myscale)
+            treble = clef.TrebleClef()
+            music_melody.insert(0, mykeyobj.__deepcopy__())
+            music_melody.insert(0, treble)
+            music_melody.insert(0, tempo.MetronomeMark(number=mytempo))
+            music_melody.insert(0, note.Rest(duration=duration.Duration(music_chords.quarterLength)))
 
-        music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre="Solo", basenotelength=1, length=music_chords.quarterLength)
-        music_melody.write('midi', "JustTheMelody.mid")
-
+        else:
+            melodyGenerator.chords_music = music_chords.__deepcopy__()
+            music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mymood, mygenre="PopPunk", basenotelength=1, length=music_chords.quarterLength)
         for thisNote in music_chords.recurse().notes:  # .getElementsByClass(note.Note):
             #print(thisNote)
             thisNote.volume = volume.Volume(velocity=80)
@@ -57,6 +66,9 @@ class PopPunkVerse(generic_part):
         music_combined = stream.Stream()
         music_combined.insert(0, music_melody.__deepcopy__())
         music_combined.insert(0, music_chords.__deepcopy__())
+
         music_combined = self.flatappend(music_combined, music_combined.__deepcopy__())
+        music_combined.write('midi', "JustTheVerse.mid")
+
         self.generated_music = music_combined
 

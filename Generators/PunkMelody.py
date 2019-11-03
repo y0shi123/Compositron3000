@@ -4,11 +4,10 @@ import music21
 class PunkMelody:
 
     def generateMelodyPartsList(self,
-        #noteints = ["0","1","2","4","5","6","r", "p", "p", "b", "b", "b"],
         noteints=["1", "2", "4", "5", "6", "r", "p", "p", "b", "b", "b"],
         timeoptions = ["h","d", " ", " "],
         stepoptions = ["+", "-", " ", " "],
-        steplengths = [0,0,1,1,2,3,4], firstnotesettochord=False, addpauses=False):
+        steplengths = [0,0,1,1,2,3,4], firstnotesettochord=False, addpauses=True):
 
         '''noteints = ["1","2","4","5","6","r", "p", "p", "b", "b", "b"]
         timeoptions = ["h","d", " ", " "]
@@ -19,9 +18,8 @@ class PunkMelody:
         for length in [1,2,4,8,16]*3:
             melodys += [self.generateMelodyPartListEntry(length=length, noteints=noteints, stepoptions=stepoptions,
                                                          timeoptions = timeoptions, steplengths=steplengths, firstnotesettochord=firstnotesettochord)]
-
         if addpauses:
-            for _ in range(3):
+            for _ in range(2):
                 melodys+= ["p", "p,p", "p,p,p,p", "p,p,p,p,p,p,p,p", "p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p"]
 
         for entry in melodys:
@@ -227,7 +225,7 @@ class PunkMelody:
                 print("Cant create melody of this length, exiting")
                 exit(0)
 
-            if (len(usedmelodysmatchinglength) != 0 and rn.randint(0,8) < 2*len(usedmelodysmatchinglength) + 5-mycompl - reusedcounter):
+            if (len(usedmelodysmatchinglength) != 0 and rn.randint(0,8) < 2*len(usedmelodysmatchinglength) + 3-mycompl - reusedcounter):
                 reusedcounter += 1
                 chosenmelody = rn.choice(usedmelodysmatchinglength)
                 print("Reusing Melodys " + str(chosenmelody))
@@ -355,13 +353,15 @@ class PunkMelody:
     def generateOctaveMelodyFromParts(self, mykey, mycompl, mytempo, myscale, mygenre, length, pattern, singlenotelength=0.5):
 
         #print("generating octave melodys")
-        stepoptions = ["+", "+", "+", "-"]
-        if(rn.randint(0,1)==0):
-            stepoptions+=[" "]
-        self.melodys = self.generateMelodyPartsList(noteints = ["p"],
+        stepoptions = ["+", "+", "+", "-", " "]
+        steplengths = [0,0,0,0,1,1,1,1,2,2,2,3,4,5]
+        if(mycompl <3):
+            steplengths+=[0,0,0,0,0]
+
+        self.melodys = self.generateMelodyPartsList(noteints = ["p", "b"],
         timeoptions = ["d"," "," "," "," "],
         stepoptions = stepoptions,
-        steplengths = [0,0,0,0,0,0,0,0,0,1,1,1,1,2,2])
+        steplengths = steplengths, addpauses=False)
         self.generateMelodyFromParts(mykey, mycompl, mytempo, myscale, mygenre, length, pattern, singlenotelength)
         #self.melody_music.show()
         replacewithoctaves = stream.Part()
@@ -371,6 +371,7 @@ class PunkMelody:
         replacewithoctaves.insert(0, treble)
         replacewithoctaves.insert(0, tempo.MetronomeMark(number=mytempo))
         for mynote in self.melody_music.getElementsByClass("Note"):
+            mynote.pitch.octave += 1
             copynote = mynote.__deepcopy__()
             copynote.pitch.octave+=1
             self.melody_music.insert(mynote.getOffsetBySite(self.melody_music), copynote)
@@ -380,7 +381,7 @@ class PunkMelody:
             replacewithoctaves.insert(mynote.getOffsetBySite(self.melody_music), octavechord)
 
         for myrest in self.melody_music.getElementsByClass("Rest"):
-            print("Pause gefunden")
+            #print("Pause gefunden")
             replacewithoctaves.insert(myrest.getOffsetBySite(self.melody_music), myrest.__deepcopy__())
 
         #self.melody_music.show()
@@ -388,12 +389,15 @@ class PunkMelody:
 
         self.melody_music = replacewithoctaves
 
-    def generateWalkMelody(self, mykey, mycompl, mytempo, myscale, mygenre, length, singlenotelength):
+    def generateWalkMelody(self, mykey, mycompl, mytempo, mymood, myscale, mygenre, length, singlenotelength):
         notesToUse = [1,2,4,5,6]
         currentNoteValue = rn.choice(notesToUse)
         #steps = [0]
-        steps = [1,1,1,1,2,3,4]
+        steps = [1,1,1,1,1,1,2,2,2,3,3,4]
         direction = 1
+        currentOctaveMod = 0
+        if (mymood < 3):
+            direction = direction*-1
 
         while (self.melody_music.quarterLength < length):
             #if(rn.randint(0,5) == 5 and self.melody_music.quarterLength + singlenotelength < self.chords_music.quarterLength ):
@@ -402,7 +406,12 @@ class PunkMelody:
             step = 0
             if(rn.randint(0,1) == 1):
                 step = rn.choice(steps)
+            if (currentNoteValue + direction * step > 6):
+                currentOctaveMod += 1
+            if (currentNoteValue + direction * step < 0):
+                currentOctaveMod -= 1
             currentNoteValue = ((currentNoteValue + direction * step) % 7)
+
             currentNote =(note.Note(mykey.pitches[currentNoteValue].name, duration=duration.Duration(singlenotelength)))
             if (rn.randint(0,10) < 4):
                 direction*= -1
@@ -411,15 +420,31 @@ class PunkMelody:
                 currentNote.duration.quarterLength*=2
             elif(self.melody_music.quarterLength + singlenotelength/2 == self.chords_music.quarterLength):
                 currentNote.duration.quarterLength/=2
-            #print("currentnote will be: {} with length: {}".format(currentNoteValue, currentNote.duration.quarterLength))
+            currentNote.pitch.octave = currentNote.pitch.implicitOctave + currentOctaveMod
+
+            if(currentNote.pitch.octave < 3):
+                currentNote.pitch.octave = 3
+            if (currentNote.pitch.octave > 5):
+                currentNote.pitch.octave = 5
+            if(self.melody_music.quarterLength>=length/2):
+                currentNote.pitch.octave = currentNote.pitch.octave +1
+            #print(currentNote.pitch.octave)
             self.melody_music.append(currentNote)
-        #self.connectChords(singlenotelength, length)
+        self.melody_music.write('midi', "OnlyMelody.mid")
+
+        self.connectChords(singlenotelength, length)
         return self.melody_music
 
     def connectChords(self, singlenoteLength, length):
+
+        #print("#############################")
+        #print(self.key.pitches)
+        #print("#############################")
         #print("Connecting Chords..")
         #allpitches = ["A", "A-", "B", "B-", "C", "D", "D-", "E", "E-", "F", "G", "G-"]
-        allpitches = ["A-", "A", "B-", "B", "C", "D-", "D", "E-", "E", "F", "G-", "G"]
+        #allpitches = ["A-", "A", "B-", "B", "C", "D-", "D", "E-", "E", "F", "G-", "G"]
+        allpitches = self.key.pitches
+
         keychords = []
         fullchords = []
         fullchordsstream = stream.Stream()
@@ -430,7 +455,7 @@ class PunkMelody:
         for x in range(4, int(length), 4):
             keychords += [self.currentchordfixed(position=x)]
         keychords += [self.currentchordfixed(position=int(length)-0.01)]
-        print(keychords)
+        #print(keychords)
         #print(keychords)
 
         for singlechord in keychords:
@@ -467,34 +492,39 @@ class PunkMelody:
 
             for currentpitch in chord.pitches:
                 for oldpitch in predecessor.pitches:
-                    if allpitches.index(currentpitch.name) == (allpitches.index(oldpitch.name)-1)%12:
+                    #if allpitches.index(currentpitch.name) == (allpitches.index(oldpitch.name)-1)%12:
+                    if allpitches.index(currentpitch) == (allpitches.index(oldpitch)-1)%8:
                         #print(str(chord) + " und " + str(predecessor) + " sind verbunden durch :" + str(currentpitch) + " und " + str(oldpitch))
                         foundsomething = True
                         currentNote = self.currentNoteObject(position = chord.getOffsetBySite(fullchordsstream))
                         oldNote     = self.currentNoteObject(position =chord.getOffsetBySite(fullchordsstream)-0.001 )
                         if (currentNote is not oldNote):
-                            currentNote.pitch = currentpitch
-                            oldNote.pitch = oldpitch
+                            currentNote.pitch.step = currentpitch.step
+                            oldNote.pitch.step = oldpitch.step
                     if foundsomething:
                         break
-                    if allpitches.index(currentpitch.name) == (allpitches.index(oldpitch.name)+1)%12:
+                    if allpitches.index(currentpitch) == (allpitches.index(oldpitch)+1)%8:
                         #print(str(chord) + " und " + str(predecessor) + " sind verbunden durch :" + str(currentpitch) + " und " + str(oldpitch))
                         foundsomething = True
                         currentNote = self.currentNoteObject(position = chord.getOffsetBySite(fullchordsstream))
                         oldNote     = self.currentNoteObject(position =chord.getOffsetBySite(fullchordsstream)-0.001 )
                         if (currentNote is not oldNote):
-                            currentNote.pitch = currentpitch
-                            oldNote.pitch = oldpitch
+                            currentNote.pitch.step = currentpitch.step
+                            oldNote.pitch.step = oldpitch.step
 
                     if foundsomething:
                        break
 
+
                 if foundsomething:
                     break
+            print("Oktave der Tauschnote:")
+            #currentNote.show()
+            print(currentNote.pitch.implicitOctave)
             if not foundsomething:
                 print("Nothing was found")
 
-    def generate(self, mykey, mycompl, mytempo, myscale, mygenre, length, basenotelength):
+    def generate(self, mykey, mycompl, mytempo, myscale, mymood, mygenre, length, basenotelength):
         self.melody_music = stream.Part()
         self.key = key.Key(mykey, myscale)
         print(self.key.pitches)
@@ -503,10 +533,11 @@ class PunkMelody:
         self.melody_music.insert(0, treble)
         self.melody_music.insert(0, tempo.MetronomeMark(number=mytempo))
 
+
         pattern = self.generateSimpleMelodyPattern(length=int((length)/basenotelength), basenotelength=basenotelength, anchor=4/basenotelength)
         print("melodypattern: " + str(pattern))
 
-        if mygenre == "Blink" or mygenre == "PopPunk" or mygenre == "Acoustic":
+        if mygenre == "Blink" or mygenre == "PopPunk" or mygenre == "Acoustic" or mygenre == "Rock":
             self.melodys = self.generateMelodyPartsList(firstnotesettochord=True)
             self.generateMelodyFromParts(mykey=self.key, mycompl=mycompl, mytempo=mytempo, myscale=myscale, mygenre=mygenre,
                                            pattern=pattern, length=length, singlenotelength=basenotelength)
@@ -514,12 +545,11 @@ class PunkMelody:
             print("Generating Octaves")
             self.generateOctaveMelodyFromParts(mykey=self.key, mycompl=mycompl, mytempo=mytempo, myscale=myscale, mygenre=mygenre,
                                            pattern=pattern, length=length, singlenotelength=basenotelength)
-
             for elem in self.melody_music.flat.getElementsByClass(["Chord", "Note"]):
                 for pitch in elem.pitches:
                     pitch.octave = pitch.implicitOctave - 1
         elif mygenre == "Solo":
-            self.generateWalkMelody(mykey = self.key, mycompl=mycompl, mytempo=mytempo, myscale=myscale, mygenre=mygenre, length=length, singlenotelength=basenotelength)
+            self.generateWalkMelody(mykey = self.key, mycompl=mycompl, mytempo=mytempo, mymood=mymood, myscale=myscale, mygenre=mygenre, length=length, singlenotelength=basenotelength)
             self.connectChords(singlenoteLength=basenotelength, length=length)
         else:
             print("Else Path")
@@ -537,34 +567,50 @@ class PunkMelody:
 if __name__== "__main__":
 
 
+    x = PunkMelody()
+    #print(x.generateMelodyPartsList())
     blubb = PunkMelody()
 
-    '''for _ in range(10):
-        ql = rn.choice([0.5, 1, 0.25])
-        print("QuarterLänge: "+str(ql))
-        print(blubb.generateSimpleMelodyPattern(int(16/ql), ql, anchor=4))
-        print("#############################")'''
     #length=int((length)/basenotelength)
     #blubb.melodys = blubb.generateMelodyPartsList()
     bla = stream.Part()
-    bla.append(chord.Chord("A4 C4 E4", duration=duration.Duration(4)))
-    bla.append(chord.Chord("F4 A4 C4", duration=duration.Duration(4)))
-    bla.append(chord.Chord("C4 E4 G4", duration=duration.Duration(4)))
-    bla.append(chord.Chord("G4 B4 D4", duration=duration.Duration(4)))
-    bla.append(chord.Chord("A4 C4 E4", duration=duration.Duration(4)))
-    bla.append(chord.Chord("F4 A4 C4", duration=duration.Duration(4)))
-    bla.append(chord.Chord("C4 E4 G4", duration=duration.Duration(4)))
-    bla.append(chord.Chord("G4 B4 D4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("C4 G4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("G4 D4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("A4 E4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("F4 C4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("A4 E4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("F4 C4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("G4 D4", duration=duration.Duration(4)))
+    bla.append(chord.Chord("C4 G4", duration=duration.Duration(4)))
 
     print(bla.quarterLength)
-    #bla.show()
     blubb.chords_music = bla
-
-    blubb.generate(mykey="C", mycompl=3, mytempo=120, myscale="Major", mygenre="Solo",length=bla.quarterLength, basenotelength=1)
+    blubb.generate(mykey="C", mycompl=3, mymood=4, mytempo=140, myscale="Major", mygenre="Punk" ,length=bla.quarterLength, basenotelength=0.5)
     #blubb.melody_music.show()
 
     mergedstream = stream.Stream()
+
+    mergedstream.append(tempo.MetronomeMark(number=140))
     mergedstream.insert(0,blubb.chords_music)
     mergedstream.insert(0,blubb.melody_music)
-    mergedstream.show()
-    #print(blubb.generateSinmpleMelodyPattern(length=32))
+    #mergedstream.show()
+
+    for elem in mergedstream.flat.getElementsByClass(["Chord", "Note"]):
+        for pitch in elem.pitches:
+            pitch.octave = pitch.implicitOctave - 1
+
+    n = note.Note("A1", type='quarter')
+    drumPart = stream.Part()
+    drumPart.insert(0, instrument.BassDrum())
+
+    while(drumPart.quarterLength<mergedstream.quarterLength):
+        drumPart.append(n.__deepcopy__())
+    mergedstream.insert(0, drumPart)
+
+    mergedstream.write('midi', "Melody.mid")
+    print("Success")
+
+
+
+
+    #print(blubb.generateSinmpleMelodyPattern(length=32))'''

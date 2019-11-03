@@ -18,12 +18,11 @@ class PopPunkChorus(generic_part):
 
     def generate(self):
 
-
         mystruct = self.knowledge["ChosenStruct"]
         mycompl = int(mystruct["compl"])
         mytempo = int(mystruct["tempo"])*30
         mytempo = max(mytempo, 60)
-        print("Tempo: " + str(mytempo))
+        mymood = int(mystruct["mood"])
         mykey = mystruct["key"]
         self.key = mykey
         myscale = mystruct["scale"]
@@ -39,16 +38,19 @@ class PopPunkChorus(generic_part):
         if mytempo >= 110:
             music_chords = chordGenerator.generate(self.key, mycompl, mytempo, myscale, mygenre="Punk", length = length)
         elif mytempo <= 70 or mygenre=="Acoustic" or mygenre=="Ballad":
-            music_chords = chordGenerator.generate(self.key, mycompl, mytempo, myscale, mygenre="Acoustic", length = length)
+            music_chords = chordGenerator.generate(self.key, mycompl, mytempo, myscale, mygenre="Punk", length = length)
         else:
             music_chords = chordGenerator.generate(self.key, mycompl, mytempo, myscale, mygenre="Rock", length = length)
         music_chords.write('midi', "JustTheChords.mid")
 
         melodyGenerator.chords_music = music_chords.__deepcopy__()
 
-
-        music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mygenre=mygenre, basenotelength=1, length=music_chords.quarterLength)
-        music_melody.write('midi', "JustTheMelody.mid")
+        if(mygenre=="Acoustic"):
+            music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mymood, mygenre="Punk",
+                                                    basenotelength=1, length=music_chords.quarterLength)
+        else:
+            music_melody = melodyGenerator.generate(mykey, mycompl, mytempo, myscale, mymood, mygenre=mygenre, basenotelength=1, length=music_chords.quarterLength)
+            music_melody.write('midi', "JustTheMelody.mid")
 
         for thisNote in music_chords.recurse().notes:  # .getElementsByClass(note.Note):
             print(thisNote)

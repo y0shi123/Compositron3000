@@ -1,82 +1,17 @@
 [{
-        "mood"  : "3",
+        "mood"  : "4",
         "compl" : "2",
-        "tempo" : "2",
-        "parts" : "PopPunkVerse, PopPunkChorus",
-        "genre" : "Acoustic",
-        "key"   : "D",
-        "scale" : "Minor"
-},{
-        "mood"  : "3",
-        "compl" : "4",
         "tempo" : "5",
-        "parts" : "PopPunkVerse, PopPunkPreChorus, PopPunkChorus, PopPunkVerse, PopPunkPreChorus, PopPunkChorus, PopPunkSolo, PopPunkChorus, PopPunkPitchedChorus",
+        "parts" : ["PopPunkVerse", "PopPunkPreChorus", "PopPunkChorus", "PopPunkVerse", "PopPunkPreChorus", "PopPunkChorus", "PopPunkSolo", "PopPunkChorus", "PopPunkPitchedChorus"],
         "genre" : "Punk",
-        "key"   : "C",
-        "scale" : "Minor"
+        "key"   : "D",
+        "scale" : "Major"
 },{
-        "mood"  : "3",
+        "mood"  : "2",
         "compl" : "2",
-        "tempo" : "2",
-        "parts" : "PopPunkChorus",
+        "tempo" : "3",
+        "parts" : ["PopPunkVerse", "PopPunkPreChorus", "PopPunkChorus", "PopPunkVerse", "PopPunkPreChorus", "PopPunkChorus", "PopPunkChorus"],
         "genre" : "Acoustic",
         "key"   : "D",
         "scale" : "Minor"
-},
-        {
-        "mood"  : "3",
-        "compl" : "2",
-        "tempo" : "4",
-        "parts" : "PunkPart, PunkPart",
-        "genre" : "PopPunk",
-        "key"   : "C",
-        "scale" : "Major"
-},
-        {"mood"  : "3",
-        "compl" : "4",
-        "tempo" : "3",
-        "parts" : "Chorus, Chorus",
-        "genre" : "ska",
-        "key"   : "D",
-        "scale" : "Major"
-},
-{       "mood"  : "3",
-        "compl" : "2",
-        "tempo" : "2",
-        "parts" : "Chorus, Chorus",
-        "genre" : "pop",
-        "key"   : "C",
-        "scale" : "major"
-},
-{       "mood"  : "3",
-        "compl" : "2",
-        "tempo" : "5",
-        "parts" : "Chorus, Chorus",
-        "genre" : "pop",
-        "key"   : "g",
-        "scale" : "Hypolydian"
-},
-{       "mood"  : "3",
-        "compl" : "4",
-        "tempo" : "4",
-        "parts" : "Chorus, Chorus",
-        "genre" : "ska",
-        "key"   : "D",
-        "scale" : "major"
-},
-        {"mood"  : "3",
-        "compl" : "5",
-        "tempo" : "5",
-        "parts" : "Chorus, Chorus",
-        "genre" : "pop",
-        "key"   : "C",
-        "scale" : "Major"
-},
-
-{       "mood" : "2",
-        "compl" : "3",
-        "tempo" : "4",
-        "parts" : "Verse, Verse, Verse",
-        "genre" : "folk"
-}
-]
+}]
